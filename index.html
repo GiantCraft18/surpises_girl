@@ -35,7 +35,7 @@
     100% { background-position: 0% 50%; }
   }
 
-  /* ===== Ночное небо со звёздами (пасхалка по кнопке) ===== */
+  /* ===== Ночное небо со звёздами ===== */
   body.night {
     background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #1a1a2e);
     background-size: 400% 400%;
@@ -128,7 +128,6 @@
     min-height: 1.4em;
   }
 
-  /* Курсор-печатная машинка */
   .typing::after {
     content: '|';
     animation: blink 0.8s step-end infinite;
@@ -323,71 +322,6 @@
     transition: opacity 0.35s ease;
   }
 
-  /* ===== Галерея ===== */
-  .gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 14px;
-  }
-  .gallery-item {
-    position: relative;
-    aspect-ratio: 1;
-    border-radius: 18px;
-    overflow: hidden;
-    cursor: pointer;
-    border: 2px solid rgba(255,255,255,0.4);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-    transition: transform 0.35s, box-shadow 0.35s;
-    background: linear-gradient(135deg, #ffd1e8, #ffb6c1);
-  }
-  .gallery-item img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s;
-  }
-  .gallery-item:hover { transform: scale(1.04); box-shadow: 0 12px 30px rgba(255,100,150,0.4); }
-  .gallery-item:hover img { transform: scale(1.12); }
-  .gallery-item .placeholder {
-    position: absolute; inset: 0;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    color: #fff; font-size: 0.8rem; text-align: center;
-    padding: 8px;
-    gap: 6px;
-  }
-  .gallery-item .placeholder span:first-child { font-size: 1.8rem; }
-
-  /* Lightbox */
-  .lightbox {
-    position: fixed; inset: 0;
-    background: rgba(20, 10, 25, 0.9);
-    backdrop-filter: blur(8px);
-    display: flex; align-items: center; justify-content: center;
-    z-index: 9999;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.35s;
-    padding: 20px;
-  }
-  .lightbox.show { opacity: 1; pointer-events: auto; }
-  .lightbox img {
-    max-width: 92vw; max-height: 88vh;
-    border-radius: 18px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-    transform: scale(0.9);
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  }
-  .lightbox.show img { transform: scale(1); }
-  .lightbox-close {
-    position: absolute; top: 20px; right: 20px;
-    width: 44px; height: 44px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.2);
-    border: 1px solid rgba(255,255,255,0.4);
-    color: #fff; font-size: 1.4rem;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-  }
-
   /* ===== Мини-игра ===== */
   .game-area {
     position: relative;
@@ -419,6 +353,8 @@
     margin-bottom: 14px;
     font-weight: 700;
     font-size: 1rem;
+    gap: 10px;
+    flex-wrap: wrap;
   }
   .game-overlay {
     position: absolute; inset: 0;
@@ -595,10 +531,8 @@
   }
   @media (max-width: 380px) {
     .card .emoji { font-size: 1.8rem; }
-    .gallery { grid-template-columns: repeat(2, 1fr); }
   }
 
-  /* Уважаем prefers-reduced-motion */
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.01ms !important;
@@ -610,19 +544,12 @@
 </head>
 <body>
 
-<!-- Ночное небо -->
 <div id="starfield"></div>
-
-<!-- Плавающие сердечки -->
 <div class="hearts" id="hearts"></div>
 
-<!-- Кнопка музыки -->
 <button class="music-btn" id="musicBtn" aria-label="Включить музыку" title="Включить музыку">🎵</button>
-
-<!-- Кнопка наверх -->
 <button class="fab" id="fab" aria-label="Наверх">↑</button>
 
-<!-- Тосты -->
 <div class="toast-container" id="toastContainer"></div>
 
 <div class="container">
@@ -631,7 +558,6 @@
     <p class="subtitle typing" id="subtitle"></p>
   </header>
 
-  <!-- Карточки -->
   <section class="cards" id="cards">
     <div class="card"><span class="emoji">🌸</span>Твоя улыбка освещает даже самый хмурый день</div>
     <div class="card"><span class="emoji">✨</span>Ты красива так, что словами не передать</div>
@@ -641,7 +567,6 @@
     <div class="card"><span class="emoji">💕</span>Просто спасибо, что ты есть</div>
   </section>
 
-  <!-- Love -->
   <section class="love-section">
     <div class="btn-row">
       <button class="btn" id="loveBtn">Нажми меня 💌</button>
@@ -651,7 +576,6 @@
     <div class="love-message" id="loveMessage"></div>
   </section>
 
-  <!-- Таймер -->
   <section class="panel">
     <div class="panel-title">💗 Мы вместе уже</div>
     <div class="counter">
@@ -665,23 +589,12 @@
     </p>
   </section>
 
-  <!-- Причина -->
   <section class="panel">
     <div class="panel-title">💞 Причина, по которой я тебя люблю</div>
     <div class="reason-box" id="reasonBox">Нажми на кнопку ниже, чтобы узнать одну из причин 💕</div>
     <button class="btn btn-small" id="reasonBtn" style="margin-top:20px;">Ещё одну причину 💗</button>
   </section>
 
-  <!-- Галерея -->
-  <section class="panel">
-    <div class="panel-title">📸 Наши моменты</div>
-    <div class="gallery" id="gallery"></div>
-    <p style="margin-top:16px; font-size:0.85rem; opacity:0.8;">
-      Замени ссылки в коде на свои фото (массив <code>photos</code>)
-    </p>
-  </section>
-
-  <!-- Мини-игра -->
   <section class="panel">
     <div class="panel-title">🎮 Поймай сердечки для Алины</div>
     <div class="game-hud">
@@ -706,13 +619,6 @@
   </footer>
 </div>
 
-<!-- Lightbox -->
-<div class="lightbox" id="lightbox">
-  <button class="lightbox-close" id="lightboxClose" aria-label="Закрыть">✕</button>
-  <img id="lightboxImg" alt="Фото">
-</div>
-
-<!-- Финальный сюрприз -->
 <div class="final-surprise" id="finalSurprise">
   <h2 id="finalTitle">Алина, ты моё всё 💖</h2>
   <p id="finalText">Каждый день с тобой — это подарок. Ты делаешь меня лучше, теплее и счастливее. Я люблю тебя больше, чем можно описать словами.</p>
@@ -721,24 +627,11 @@
 
 <script>
 /* =====================================================
-   НАСТРОЙКИ — меняй под себя!
+   НАСТРОЙКИ
    ===================================================== */
 const CONFIG = {
-  // Дата начала отношений (YYYY-MM-DDTHH:MM:SS)
-  startDate: '2023-01-01T00:00:00',
-
-  // Ссылки на фото (можно заменить на свои) — 6 штук
-  photos: [
-    'https://picsum.photos/seed/alina1/600/600',
-    'https://picsum.photos/seed/alina2/600/600',
-    'https://picsum.photos/seed/alina3/600/600',
-    'https://picsum.photos/seed/alina4/600/600',
-    'https://picsum.photos/seed/alina5/600/600',
-    'https://picsum.photos/seed/alina6/600/600'
-  ],
-
-  // Ссылка на музыку (mp3). Оставь пустым, чтобы был встроенный синтезатор
-  musicUrl: '',
+  startDate: '2023-01-01T00:00:00', // дата начала отношений
+  musicUrl: ''                      // свой .mp3 (опционально)
 };
 
 /* =====================================================
@@ -764,7 +657,7 @@ setInterval(createHeart, 750);
 for (let i = 0; i < 10; i++) setTimeout(createHeart, i * 200);
 
 /* =====================================================
-   Типичный текст в подзаголовке
+   Печатный подзаголовок
    ===================================================== */
 const subtitleEl = document.getElementById('subtitle');
 const subtitleText = 'Ты — самое тёплое, что случилось со мной 💗';
@@ -878,7 +771,7 @@ function burstHearts(el, count = 10) {
 }
 
 document.addEventListener('click', (e) => {
-  if (e.target.closest('button, a, .card, .gallery-item, .game-heart, .lightbox')) return;
+  if (e.target.closest('button, a, .card, .game-heart')) return;
   spawnClickHeart(e.clientX, e.clientY);
 });
 
@@ -918,42 +811,7 @@ updateCounter();
 setInterval(updateCounter, 1000);
 
 /* =====================================================
-   Галерея + Lightbox
-   ===================================================== */
-const galleryEl = document.getElementById('gallery');
-const lightbox = document.getElementById('lightbox');
-const lightboxImg = document.getElementById('lightboxImg');
-const lightboxClose = document.getElementById('lightboxClose');
-
-CONFIG.photos.forEach((src, i) => {
-  const item = document.createElement('div');
-  item.className = 'gallery-item';
-  const img = document.createElement('img');
-  img.loading = 'lazy';
-  img.alt = 'Фото ' + (i + 1);
-  img.src = src;
-  img.onerror = () => {
-    img.remove();
-    const ph = document.createElement('div');
-    ph.className = 'placeholder';
-    ph.innerHTML = '<span>🌸</span><span>Наш момент #' + (i + 1) + '</span>';
-    item.appendChild(ph);
-  };
-  item.appendChild(img);
-  item.addEventListener('click', () => {
-    if (!img.src) return;
-    lightboxImg.src = img.src;
-    lightbox.classList.add('show');
-  });
-  galleryEl.appendChild(item);
-});
-
-function closeLightbox() { lightbox.classList.remove('show'); }
-lightboxClose.addEventListener('click', closeLightbox);
-lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
-
-/* =====================================================
-   Пасхалка: двойной клик по заголовку
+   Пасхалки на заголовке
    ===================================================== */
 const title = document.getElementById('title');
 let easterEggOn = false;
@@ -968,9 +826,6 @@ title.addEventListener('dblclick', () => {
   }
 });
 
-/* =====================================================
-   Долгое удержание на заголовке — ещё пасхалка
-   ===================================================== */
 let pressTimer;
 title.addEventListener('pointerdown', () => {
   pressTimer = setTimeout(() => {
@@ -983,7 +838,7 @@ title.addEventListener('pointerdown', () => {
 );
 
 /* =====================================================
-   Клик по карточке — wiggle + сердечки
+   Карточки
    ===================================================== */
 document.querySelectorAll('.card').forEach(card => {
   card.addEventListener('click', () => {
@@ -1073,7 +928,7 @@ confettiBtn.addEventListener('click', () => {
 });
 
 /* =====================================================
-   Фейерверк (сердечки во все стороны)
+   Фейерверк
    ===================================================== */
 function fireworks() {
   for (let k = 0; k < 3; k++) {
@@ -1099,7 +954,7 @@ function fireworks() {
 }
 
 /* =====================================================
-   Мини-игра "Поймай сердечки"
+   Мини-игра
    ===================================================== */
 const gameArea = document.getElementById('gameArea');
 const gameOverlay = document.getElementById('gameOverlay');
@@ -1205,12 +1060,11 @@ function startSynthMusic() {
   }
   if (audioCtx.state === 'suspended') audioCtx.resume();
 
-  // Простая милая мелодия
   const notes = [523.25, 587.33, 659.25, 783.99, 659.25, 587.33, 523.25, 392.00,
                  440.00, 523.25, 659.25, 587.33, 523.25, 440.00, 392.00, 523.25];
   const noteDur = 0.45;
-
   let idx = 0;
+
   function playNote() {
     if (!musicPlaying) return;
     const freq = notes[idx % notes.length];
@@ -1292,16 +1146,12 @@ finalBtn.addEventListener('click', () => {
 closeSurprise.addEventListener('click', () => finalSurprise.classList.remove('show'));
 
 /* =====================================================
-   Приветственный тост
+   Приветствия
    ===================================================== */
 setTimeout(() => {
   showToast('Привет, Алина! Этот сайт — для тебя 💖', 3500);
 }, 1200);
 
-/* =====================================================
-   Сохранение прокрутки? нет. Но сохраняем то, что рекорд и ночной режим — уже.
-   Также приветствие по времени суток
-   ===================================================== */
 setTimeout(() => {
   const h = new Date().getHours();
   let greeting;
@@ -1313,7 +1163,7 @@ setTimeout(() => {
 }, 5200);
 
 /* =====================================================
-   Эффект: если Алина долго не скроллит — комплимент
+   Комплименты по бездействию
    ===================================================== */
 let idleTimer;
 const idlePhrases = [
@@ -1336,12 +1186,10 @@ function resetIdle() {
 resetIdle();
 
 /* =====================================================
-   Координация: избегаем утечек при скрытой вкладке
+   Остановка игры при скрытии вкладки
    ===================================================== */
 document.addEventListener('visibilitychange', () => {
-  if (document.hidden) {
-    if (gameRunning) endGame();
-  }
+  if (document.hidden && gameRunning) endGame();
 });
 </script>
 
