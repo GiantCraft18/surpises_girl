@@ -112,9 +112,7 @@
     cursor: pointer;
     user-select: none;
   }
-  @keyframes shine {
-    to { background-position: 300% center; }
-  }
+  @keyframes shine { to { background-position: 300% center; } }
   @keyframes pulse {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.04); }
@@ -170,6 +168,12 @@
   }
   .btn:hover { transform: scale(1.07); box-shadow: 0 12px 35px rgba(255, 80, 130, 0.65); }
   .btn:active { transform: scale(0.96); }
+  .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    animation: none;
+    transform: none !important;
+  }
 
   .btn-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
 
@@ -235,9 +239,7 @@
   }
   .card:hover .emoji { transform: scale(1.25) rotate(-8deg); }
 
-  .card.flipped {
-    animation: wiggle 0.5s ease;
-  }
+  .card.flipped { animation: wiggle 0.5s ease; }
   @keyframes wiggle {
     0%, 100% { transform: rotate(0); }
     25% { transform: rotate(-3deg) scale(1.04); }
@@ -322,51 +324,263 @@
     transition: opacity 0.35s ease;
   }
 
-  /* ===== Мини-игра ===== */
-  .game-area {
+  /* =====================================================
+     КОЛЕСО ФОРТУНЫ
+     ===================================================== */
+  .wheel-panel { overflow: visible; }
+
+  .wheel-wrap {
     position: relative;
-    height: 320px;
-    border-radius: 20px;
-    background: rgba(255,255,255,0.12);
-    border: 1px dashed rgba(255,255,255,0.5);
-    overflow: hidden;
-    touch-action: none;
+    width: min(340px, 78vw);
+    height: min(340px, 78vw);
+    margin: 10px auto 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
-  .game-heart {
+
+  .wheel-pointer {
     position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
     font-size: 2rem;
-    cursor: pointer;
-    user-select: none;
-    transition: transform 0.1s;
-    filter: drop-shadow(0 2px 8px rgba(255,100,150,0.5));
-    animation: popIn 0.3s ease;
+    filter: drop-shadow(0 3px 8px rgba(0,0,0,0.35));
+    animation: pointerBob 1.5s ease-in-out infinite;
+    pointer-events: none;
   }
-  @keyframes popIn {
-    from { transform: scale(0); }
-    to { transform: scale(1); }
+  @keyframes pointerBob {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(4px); }
   }
-  .game-heart:active { transform: scale(0.8); }
+
+  .wheel {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    box-shadow:
+      0 0 0 8px rgba(255,255,255,0.35),
+      0 0 0 14px rgba(255,255,255,0.15),
+      0 18px 50px rgba(0,0,0,0.3);
+    transition: transform 5s cubic-bezier(0.15, 0.9, 0.25, 1);
+    will-change: transform;
+    background: conic-gradient(
+      #ff6b9d 0deg 45deg,
+      #ffb6c1 45deg 90deg,
+      #a18cd1 90deg 135deg,
+      #fbc2eb 135deg 180deg,
+      #ff8fb1 180deg 225deg,
+      #ffd1e8 225deg 270deg,
+      #b892e8 270deg 315deg,
+      #ff9ec7 315deg 360deg
+    );
+  }
+
+  .wheel-center {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 26%;
+    height: 26%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #fff, #ffd1e8 60%, #ff6b9d);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3), inset 0 -3px 8px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  .wheel-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform-origin: 0 0;
+    font-size: clamp(0.62rem, 2.4vw, 0.82rem);
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.45);
+    pointer-events: none;
+    width: 44%;
+    text-align: right;
+    padding-right: 10px;
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+
+  .wheel-result {
+    min-height: 70px;
+    font-size: clamp(1rem, 3.6vw, 1.25rem);
+    font-weight: 700;
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 16px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.18);
+    border: 1px dashed rgba(255,255,255,0.45);
+    transition: all 0.4s ease;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.15);
+  }
+  .wheel-result.win {
+    animation: resultPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background: rgba(255,255,255,0.32);
+    box-shadow: 0 8px 30px rgba(255,100,150,0.45);
+  }
+  @keyframes resultPop {
+    0% { transform: scale(0.7); opacity: 0; }
+    60% { transform: scale(1.08); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  /* =====================================================
+     ИГРА "СЕРДЕЧНЫЙ ДОЖДЬ"
+     ===================================================== */
+  .game-panel { position: relative; }
+
   .game-hud {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
     font-weight: 700;
-    font-size: 1rem;
-    gap: 10px;
+    font-size: 0.98rem;
+    gap: 8px;
     flex-wrap: wrap;
   }
+  .game-hud-item {
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.35);
+    padding: 7px 14px;
+    border-radius: 30px;
+    min-width: 84px;
+    transition: transform 0.2s, background 0.3s;
+  }
+  .game-hud-item.hit {
+    transform: scale(1.12);
+    background: rgba(255,255,255,0.4);
+  }
+  .game-hud-item .label { opacity: 0.8; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
+
+  #lives { letter-spacing: 2px; }
+
+  .game-area {
+    position: relative;
+    height: 380px;
+    border-radius: 20px;
+    background:
+      radial-gradient(circle at 30% 20%, rgba(255,255,255,0.22), transparent 60%),
+      radial-gradient(circle at 70% 80%, rgba(255,180,220,0.25), transparent 60%),
+      rgba(255,255,255,0.1);
+    border: 1px dashed rgba(255,255,255,0.5);
+    overflow: hidden;
+    touch-action: none;
+    cursor: crosshair;
+    user-select: none;
+  }
+
+  .game-area::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    box-shadow: inset 0 0 60px rgba(255,100,150,0.15);
+    border-radius: 20px;
+  }
+
+  /* Падающие сердечки */
+  .fall-heart {
+    position: absolute;
+    top: -60px;
+    font-size: 2rem;
+    cursor: pointer;
+    user-select: none;
+    will-change: transform;
+    filter: drop-shadow(0 3px 8px rgba(255,100,150,0.5));
+    transition: opacity 0.2s;
+    line-height: 1;
+  }
+  .fall-heart.gold { font-size: 2.4rem; filter: drop-shadow(0 0 14px gold); }
+  .fall-heart.bomb { filter: drop-shadow(0 3px 8px rgba(0,0,0,0.5)); }
+
+  .pop-particle {
+    position: absolute;
+    pointer-events: none;
+    font-weight: 900;
+    font-size: 1.1rem;
+    color: #fff;
+    text-shadow: 0 2px 8px rgba(255,80,130,0.8);
+    animation: popText 0.8s ease-out forwards;
+    z-index: 10;
+    white-space: nowrap;
+  }
+  @keyframes popText {
+    0% { transform: translate(-50%, 0) scale(0.6); opacity: 1; }
+    100% { transform: translate(-50%, -70px) scale(1.3); opacity: 0; }
+  }
+
+  .combo-banner {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0.5);
+    font-size: clamp(1.6rem, 7vw, 2.6rem);
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 0 4px 20px rgba(255,80,130,0.9), 0 0 40px rgba(255,255,255,0.6);
+    pointer-events: none;
+    opacity: 0;
+    z-index: 15;
+    white-space: nowrap;
+  }
+  .combo-banner.show { animation: comboPop 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+  @keyframes comboPop {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.4) rotate(-8deg); }
+    40% { opacity: 1; transform: translate(-50%, -50%) scale(1.15) rotate(2deg); }
+    100% { opacity: 0; transform: translate(-50%, -70%) scale(1) rotate(0); }
+  }
+
   .game-overlay {
     position: absolute; inset: 0;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    background: rgba(255, 150, 180, 0.3);
-    backdrop-filter: blur(4px);
-    gap: 12px;
-    padding: 20px;
+    background: rgba(255, 150, 180, 0.35);
+    backdrop-filter: blur(6px);
+    gap: 14px;
+    padding: 22px;
     text-align: center;
+    z-index: 20;
+    transition: opacity 0.4s;
   }
   .game-overlay.hidden { display: none; }
+  .game-overlay h3 { font-size: clamp(1.2rem, 5vw, 1.7rem); }
+  .game-overlay p { max-width: 320px; line-height: 1.5; font-size: 0.95rem; }
+  .game-overlay .legend {
+    display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;
+    font-size: 0.85rem; opacity: 0.95;
+  }
+  .game-overlay .legend span { white-space: nowrap; }
+
+  /* Прогресс-бар уровня */
+  .level-bar {
+    height: 8px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.2);
+    margin-top: 12px;
+    overflow: hidden;
+  }
+  .level-bar-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #fff, #ffd1e8, #fff);
+    transition: width 0.4s ease;
+    box-shadow: 0 0 12px rgba(255,255,255,0.7);
+  }
 
   /* ===== Toasts ===== */
   .toast-container {
@@ -525,12 +739,17 @@
     .btn { padding: 15px 30px; font-size: 1rem; }
     .btn-row { gap: 10px; }
     .panel { padding: 24px 16px; }
-    .game-area { height: 260px; }
+    .game-area { height: 320px; }
     .music-btn { top: 12px; right: 12px; width: 42px; height: 42px; }
     .fab { bottom: 16px; right: 16px; width: 46px; height: 46px; }
+    .fall-heart { font-size: 1.7rem; }
+    .fall-heart.gold { font-size: 2rem; }
+    .game-hud-item { padding: 6px 11px; min-width: 72px; font-size: 0.85rem; }
   }
   @media (max-width: 380px) {
     .card .emoji { font-size: 1.8rem; }
+    .wheel-label { font-size: 0.55rem; }
+    .game-hud-item { min-width: 64px; font-size: 0.8rem; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -539,6 +758,7 @@
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
     }
+    .wheel { transition-duration: 0.01ms !important; }
   }
 </style>
 </head>
@@ -595,19 +815,62 @@
     <button class="btn btn-small" id="reasonBtn" style="margin-top:20px;">Ещё одну причину 💗</button>
   </section>
 
-  <section class="panel">
-    <div class="panel-title">🎮 Поймай сердечки для Алины</div>
-    <div class="game-hud">
-      <div>Счёт: <span id="score">0</span></div>
-      <div>Рекорд: <span id="best">0</span></div>
-      <div>Время: <span id="time">15</span>с</div>
+  <!-- ============================================
+       КОЛЕСО ФОРТУНЫ
+       ============================================ -->
+  <section class="panel wheel-panel">
+    <div class="panel-title">🎡 Колесо фортуны</div>
+    <p style="margin-bottom: 8px; opacity: 0.9; font-size: 0.95rem;">
+      Крути и узнай, что тебя ждёт 💫
+    </p>
+
+    <div class="wheel-wrap">
+      <div class="wheel-pointer">🔻</div>
+      <div class="wheel" id="wheel"></div>
+      <div class="wheel-center">💖</div>
     </div>
-    <div class="game-area" id="gameArea">
+
+    <div class="btn-row" style="margin-bottom: 18px;">
+      <button class="btn" id="spinBtn">Крутить 🎡</button>
+    </div>
+
+    <div class="wheel-result" id="wheelResult">
+      Нажми «Крутить», и колесо решит твою судьбу 💕
+    </div>
+  </section>
+
+  <!-- ============================================
+       ИГРА "СЕРДЕЧНЫЙ ДОЖДЬ"
+       ============================================ -->
+  <section class="panel game-panel">
+    <div class="panel-title">🎮 Сердечный дождь</div>
+
+    <div class="game-hud">
+      <div class="game-hud-item"><span class="label">Счёт</span><span id="score">0</span></div>
+      <div class="game-hud-item"><span class="label">Уровень</span><span id="level">1</span></div>
+      <div class="game-hud-item"><span class="label">Комбо</span><span id="combo">x1</span></div>
+      <div class="game-hud-item"><span class="label">Жизни</span><span id="lives">❤️❤️❤️</span></div>
+    </div>
+
+    <div class="level-bar"><div class="level-bar-fill" id="levelBar"></div></div>
+
+    <div class="game-area" id="gameArea" style="margin-top:12px;">
       <div class="game-overlay" id="gameOverlay">
-        <p style="font-size:1.05rem;">Собери как можно больше сердечек за 15 секунд! 💖</p>
+        <h3>💖 Сердечный дождь</h3>
+        <p>Лови падающие сердечки! Чем больше поймаешь — тем выше уровень.</p>
+        <div class="legend">
+          <span>💖 +1</span>
+          <span>⭐ +5 (золотое)</span>
+          <span>💣 −1 жизнь</span>
+        </div>
+        <p style="font-size:0.85rem; opacity:0.9;">3 жизни. Комбо даёт бонусные очки!</p>
         <button class="btn btn-small" id="startGame">Начать игру</button>
       </div>
     </div>
+
+    <p style="margin-top:12px; font-size:0.85rem; opacity:0.85;">
+      🏆 Рекорд: <b id="best">0</b>
+    </p>
   </section>
 
   <footer>
@@ -635,7 +898,14 @@ const CONFIG = {
 };
 
 /* =====================================================
-   Плавающие сердечки
+   УТИЛИТЫ
+   ===================================================== */
+const rand = (min, max) => Math.random() * (max - min) + min;
+const randInt = (min, max) => Math.floor(rand(min, max + 1));
+const pick = arr => arr[(Math.random() * arr.length) | 0];
+
+/* =====================================================
+   Плавающие сердечки фона
    ===================================================== */
 const heartsContainer = document.getElementById('hearts');
 const heartEmojis = ['💖','💕','💗','💓','💝','🌸','✨','💘','🌷','💞'];
@@ -644,7 +914,7 @@ function createHeart() {
   if (document.hidden) return;
   const heart = document.createElement('div');
   heart.className = 'heart';
-  heart.textContent = heartEmojis[(Math.random() * heartEmojis.length) | 0];
+  heart.textContent = pick(heartEmojis);
   heart.style.left = Math.random() * 100 + 'vw';
   heart.style.fontSize = (Math.random() * 20 + 14) + 'px';
   const dur = Math.random() * 8 + 9;
@@ -696,7 +966,7 @@ const loveMessage = document.getElementById('loveMessage');
 
 loveBtn.addEventListener('click', () => {
   let idx;
-  do { idx = (Math.random() * loveMessages.length) | 0; }
+  do { idx = randInt(0, loveMessages.length - 1); }
   while (idx === lastLoveIdx && loveMessages.length > 1);
   lastLoveIdx = idx;
 
@@ -749,14 +1019,14 @@ const clickHearts = ['💖','💕','💗','💓','✨','🌸','💞','💘'];
 function spawnClickHeart(x, y) {
   const h = document.createElement('div');
   h.className = 'click-heart';
-  h.textContent = clickHearts[(Math.random() * clickHearts.length) | 0];
+  h.textContent = pick(clickHearts);
   h.style.left = x + 'px';
   h.style.top = y + 'px';
   const angle = Math.random() * Math.PI * 2;
-  const dist = Math.random() * 130 + 50;
+  const dist = rand(50, 180);
   h.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
   h.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
-  h.style.fontSize = (Math.random() * 14 + 14) + 'px';
+  h.style.fontSize = rand(14, 28) + 'px';
   document.body.appendChild(h);
   setTimeout(() => h.remove(), 1000);
 }
@@ -771,7 +1041,7 @@ function burstHearts(el, count = 10) {
 }
 
 document.addEventListener('click', (e) => {
-  if (e.target.closest('button, a, .card, .game-heart')) return;
+  if (e.target.closest('button, a, .card, .fall-heart, .wheel, .wheel-wrap')) return;
   spawnClickHeart(e.clientX, e.clientY);
 });
 
@@ -811,7 +1081,7 @@ updateCounter();
 setInterval(updateCounter, 1000);
 
 /* =====================================================
-   Пасхалки на заголовке
+   Пасхалки
    ===================================================== */
 const title = document.getElementById('title');
 let easterEggOn = false;
@@ -864,7 +1134,7 @@ function showToast(text, duration = 2800) {
 }
 
 /* =====================================================
-   Ночной режим + звёзды
+   Ночной режим
    ===================================================== */
 const nightBtn = document.getElementById('nightBtn');
 const starfield = document.getElementById('starfield');
@@ -874,13 +1144,13 @@ function createStars() {
   for (let i = 0; i < 90; i++) {
     const s = document.createElement('div');
     s.className = 'star';
-    const size = Math.random() * 2.5 + 0.5;
+    const size = rand(0.5, 3);
     s.style.width = size + 'px';
     s.style.height = size + 'px';
     s.style.left = Math.random() * 100 + '%';
     s.style.top = Math.random() * 100 + '%';
     s.style.animationDelay = Math.random() * 3 + 's';
-    s.style.animationDuration = (Math.random() * 2 + 2) + 's';
+    s.style.animationDuration = rand(2, 4) + 's';
     starfield.appendChild(s);
   }
 }
@@ -910,11 +1180,11 @@ function spawnConfetti(count = 80) {
     c.className = 'confetti';
     c.style.left = Math.random() * 100 + 'vw';
     c.style.top = '-20px';
-    c.style.background = confettiColors[(Math.random() * confettiColors.length) | 0];
-    c.style.width = (Math.random() * 8 + 5) + 'px';
-    c.style.height = (Math.random() * 12 + 6) + 'px';
+    c.style.background = pick(confettiColors);
+    c.style.width = rand(5, 13) + 'px';
+    c.style.height = rand(6, 18) + 'px';
     if (Math.random() > 0.5) c.style.borderRadius = '50%';
-    const dur = Math.random() * 2 + 2.5;
+    const dur = rand(2.5, 4.5);
     c.style.animation = `confettiFall ${dur}s linear forwards`;
     c.style.animationDelay = Math.random() * 0.8 + 's';
     document.body.appendChild(c);
@@ -933,19 +1203,19 @@ confettiBtn.addEventListener('click', () => {
 function fireworks() {
   for (let k = 0; k < 3; k++) {
     setTimeout(() => {
-      const x = window.innerWidth * (0.2 + Math.random() * 0.6);
-      const y = window.innerHeight * (0.2 + Math.random() * 0.4);
+      const x = window.innerWidth * rand(0.2, 0.8);
+      const y = window.innerHeight * rand(0.2, 0.6);
       for (let i = 0; i < 20; i++) {
         const h = document.createElement('div');
         h.className = 'click-heart';
-        h.textContent = clickHearts[(Math.random() * clickHearts.length) | 0];
+        h.textContent = pick(clickHearts);
         h.style.left = x + 'px';
         h.style.top = y + 'px';
         const angle = (Math.PI * 2 * i) / 20;
-        const dist = Math.random() * 100 + 120;
+        const dist = rand(120, 220);
         h.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
         h.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
-        h.style.fontSize = (Math.random() * 12 + 16) + 'px';
+        h.style.fontSize = rand(16, 28) + 'px';
         document.body.appendChild(h);
         setTimeout(() => h.remove(), 1000);
       }
@@ -954,94 +1224,385 @@ function fireworks() {
 }
 
 /* =====================================================
-   Мини-игра
+   КОЛЕСО ФОРТУНЫ
+   ===================================================== */
+const wheelSegments = [
+  { label: 'Свидание 💕',     color: '#ff6b9d', text: 'Свидание при свечах 🕯️' },
+  { label: 'Комплимент ✨',   color: '#ffb6c1', text: 'Ты самая красивая на свете ✨' },
+  { label: 'Обнимашки 🤗',    color: '#a18cd1', text: 'Крепкие объятия на 1 минуту 🤗' },
+  { label: 'Поцелуй 💋',      color: '#fbc2eb', text: 'Поцелуй в щёчку 💋' },
+  { label: 'Сюрприз 🎁',      color: '#ff8fb1', text: 'Маленький сюрприз ждёт тебя 🎁' },
+  { label: 'Прогулка 🌸',     color: '#ffd1e8', text: 'Прогулка под луной 🌙' },
+  { label: 'Кино 🎬',         color: '#b892e8', text: 'Вечер кино вдвоём 🎬' },
+  { label: 'Признание 💌',    color: '#ff9ec7', text: 'Я люблю тебя больше жизни 💌' }
+];
+
+const wheelEl = document.getElementById('wheel');
+const spinBtn = document.getElementById('spinBtn');
+const wheelResult = document.getElementById('wheelResult');
+
+// Построение секторов (8 = 45°)
+const SEG_ANGLE = 360 / wheelSegments.length;
+let wheelLabels = [];
+
+function buildWheel() {
+  // фон-градиент уже задан через conic-gradient в CSS.
+  // расставим подписи
+  wheelLabels.forEach(l => l.remove());
+  wheelLabels = [];
+
+  wheelSegments.forEach((seg, i) => {
+    const midAngle = i * SEG_ANGLE + SEG_ANGLE / 2;
+    const label = document.createElement('div');
+    label.className = 'wheel-label';
+    label.textContent = seg.label;
+    // Ставим подпись по центру сектора вдоль радиуса
+    // origin 0 0 = центр колеса
+    label.style.transform = `rotate(${midAngle - 90}deg) translate(0, -50%)`;
+    label.style.left = '50%';
+    label.style.top = '50%';
+    // Сдвиг к краю: благодаря width 44% и text-align:right — подпись уходит наружу
+    label.style.transformOrigin = '0 50%';
+    label.style.transform = `rotate(${midAngle}deg) translate(6%, 0)`;
+    wheelEl.appendChild(label);
+    wheelLabels.push(label);
+  });
+}
+
+buildWheel();
+
+let currentRotation = 0;
+let spinning = false;
+
+spinBtn.addEventListener('click', () => {
+  if (spinning) return;
+  spinning = true;
+  spinBtn.disabled = true;
+  wheelResult.classList.remove('win');
+  wheelResult.textContent = 'Колесо крутится… 🎡';
+
+  // Случайный победитель
+  const winnerIdx = randInt(0, wheelSegments.length - 1);
+
+  // Угол: центр сектора победителя должен оказаться под стрелкой (сверху, -90°)
+  // Сектор i занимает [i*SEG, (i+1)*SEG] градусов в системе колеса.
+  // Нам нужно, чтобы после поворота центр сектора оказался на -90° (стрелка сверху).
+  const segCenter = winnerIdx * SEG_ANGLE + SEG_ANGLE / 2;
+  // Сколько нужно добавить к текущему повороту
+  const targetRotation = 360 * randInt(4, 6) + (360 - segCenter);
+
+  currentRotation += targetRotation;
+  wheelEl.style.transform = `rotate(${currentRotation}deg)`;
+
+  setTimeout(() => {
+    spinning = false;
+    spinBtn.disabled = false;
+
+    const result = wheelSegments[winnerIdx];
+    wheelResult.textContent = result.text;
+    wheelResult.classList.add('win');
+    confettiBurstOnElement(wheelResult);
+    spawnConfetti(60);
+    showToast('🎉 Твой приз: ' + result.label, 3200);
+    if (navigator.vibrate) navigator.vibrate([30, 40, 60]);
+  }, 5200);
+});
+
+function confettiBurstOnElement(el) {
+  const rect = el.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  for (let i = 0; i < 14; i++) spawnClickHeart(cx, cy);
+}
+
+/* =====================================================
+   ИГРА "СЕРДЕЧНЫЙ ДОЖДЬ"
    ===================================================== */
 const gameArea = document.getElementById('gameArea');
 const gameOverlay = document.getElementById('gameOverlay');
 const startGameBtn = document.getElementById('startGame');
 const scoreEl = document.getElementById('score');
+const levelEl = document.getElementById('level');
+const comboEl = document.getElementById('combo');
+const livesEl = document.getElementById('lives');
 const bestEl = document.getElementById('best');
-const timeEl = document.getElementById('time');
+const levelBar = document.getElementById('levelBar');
 
-let bestScore = parseInt(localStorage.getItem('alina_best') || '0', 10);
+let bestScore = parseInt(localStorage.getItem('alina_best2') || '0', 10);
 bestEl.textContent = bestScore;
 
-let gameRunning = false;
-let score = 0;
-let timeLeft = 15;
-let spawnInterval, tickInterval, activeHeart = null;
+const GAME = {
+  running: false,
+  score: 0,
+  level: 1,
+  lives: 3,
+  combo: 1,
+  comboCount: 0,
+  comboTimeout: null,
+  levelProgress: 0,      // 0..1 внутри уровня
+  levelTarget: 5,        // сколько сердечек для следующего уровня
+  levelCaught: 0,
+  spawnInterval: null,
+  rafId: null,
+  hearts: [],            // {el, x, y, vy, type, points}
+  lastTime: 0,
+  spawnRate: 900,        // мс между спавнами
+  fallSpeed: 0.12        // скорость в px/ms (будет расти)
+};
+
+function updateHUD() {
+  scoreEl.textContent = GAME.score;
+  levelEl.textContent = GAME.level;
+  comboEl.textContent = 'x' + GAME.combo;
+  livesEl.textContent = '❤️'.repeat(GAME.lives) || '💔';
+  levelBar.style.width = Math.min(100, (GAME.levelCaught / GAME.levelTarget) * 100) + '%';
+}
+
+function resetGame() {
+  // очистить поле
+  GAME.hearts.forEach(h => h.el.remove());
+  GAME.hearts = [];
+  gameArea.querySelectorAll('.pop-particle, .combo-banner').forEach(n => n.remove());
+
+  GAME.score = 0;
+  GAME.level = 1;
+  GAME.lives = 3;
+  GAME.combo = 1;
+  GAME.comboCount = 0;
+  GAME.levelCaught = 0;
+  GAME.levelTarget = 5;
+  GAME.spawnRate = 900;
+  GAME.fallSpeed = 0.12;
+  clearTimeout(GAME.comboTimeout);
+  updateHUD();
+}
 
 function startGame() {
-  if (gameRunning) return;
-  gameRunning = true;
-  score = 0;
-  timeLeft = 15;
-  scoreEl.textContent = '0';
-  timeEl.textContent = '15';
+  if (GAME.running) return;
+  resetGame();
+  GAME.running = true;
   gameOverlay.classList.add('hidden');
-  removeActiveHeart();
 
-  tickInterval = setInterval(() => {
-    timeLeft--;
-    timeEl.textContent = timeLeft;
-    if (timeLeft <= 0) endGame();
-  }, 1000);
-
-  spawnInterval = setInterval(spawnGameHeart, 750);
-  spawnGameHeart();
+  GAME.lastTime = performance.now();
+  scheduleSpawn();
+  GAME.rafId = requestAnimationFrame(gameLoop);
 }
 
-function spawnGameHeart() {
-  if (!gameRunning) return;
-  removeActiveHeart();
-  const areaRect = gameArea.getBoundingClientRect();
-  const h = document.createElement('div');
-  h.className = 'game-heart';
-  h.textContent = clickHearts[(Math.random() * clickHearts.length) | 0];
-  const maxX = areaRect.width - 50;
-  const maxY = areaRect.height - 50;
-  h.style.left = Math.max(4, Math.random() * maxX) + 'px';
-  h.style.top = Math.max(4, Math.random() * maxY) + 'px';
-  h.addEventListener('pointerdown', (e) => {
+function scheduleSpawn() {
+  if (!GAME.running) return;
+  spawnFallingHeart();
+  GAME.spawnInterval = setTimeout(scheduleSpawn, GAME.spawnRate);
+}
+
+function spawnFallingHeart() {
+  const rect = gameArea.getBoundingClientRect();
+  if (!rect.width) return;
+
+  // выбор типа
+  const r = Math.random();
+  let type = 'normal', points = 1, emoji = pick(['💖','💕','💗','💓','💞','🌸','✨']);
+  if (r < 0.08) { type = 'gold';  points = 5; emoji = '⭐'; }
+  else if (r < 0.22) { type = 'bomb'; points = -1; emoji = '💣'; }
+
+  const el = document.createElement('div');
+  el.className = 'fall-heart' + (type === 'gold' ? ' gold' : '') + (type === 'bomb' ? ' bomb' : '');
+  el.textContent = emoji;
+  el.style.left = '0px';
+  el.style.top = '0px';
+  gameArea.appendChild(el);
+
+  const x = rand(6, rect.width - 50);
+  const y = -50;
+  const vy = GAME.fallSpeed * rand(0.85, 1.25) * (type === 'gold' ? 1.3 : 1);
+
+  const heart = { el, x, y, vy, type, points, caught: false };
+  GAME.hearts.push(heart);
+  el.style.transform = `translate(${x}px, ${y}px)`;
+
+  el.addEventListener('pointerdown', (e) => {
     e.preventDefault();
-    if (!gameRunning) return;
-    score++;
-    scoreEl.textContent = score;
-    const r = h.getBoundingClientRect();
-    spawnClickHeart(r.left + r.width / 2, r.top + r.height / 2);
-    removeActiveHeart();
+    e.stopPropagation();
+    if (!GAME.running || heart.caught) return;
+    heart.caught = true;
+    handleCatch(heart);
   });
-  gameArea.appendChild(h);
-  activeHeart = h;
 }
 
-function removeActiveHeart() {
-  if (activeHeart && activeHeart.parentNode) activeHeart.remove();
-  activeHeart = null;
+function handleCatch(heart) {
+  const elRect = heart.el.getBoundingClientRect();
+  const areaRect = gameArea.getBoundingClientRect();
+  const cx = elRect.left - areaRect.left + elRect.width / 2;
+  const cy = elRect.top - areaRect.top + elRect.height / 2;
+
+  if (heart.type === 'bomb') {
+    GAME.lives--;
+    GAME.combo = 1;
+    GAME.comboCount = 0;
+    updateHUD();
+    showPopText('−1 ❤️', cx, cy);
+    heart.el.remove();
+    removeHeartFromList(heart);
+    if (navigator.vibrate) navigator.vibrate(80);
+    if (GAME.lives <= 0) endGame();
+    return;
+  }
+
+  // нормальное или золотое
+  GAME.comboCount++;
+  if (GAME.comboCount >= 3) {
+    GAME.combo = Math.min(8, 1 + Math.floor(GAME.comboCount / 3));
+  }
+  // Сброс комбо по таймеру
+  clearTimeout(GAME.comboTimeout);
+  GAME.comboTimeout = setTimeout(() => {
+    GAME.combo = 1;
+    GAME.comboCount = 0;
+    updateHUD();
+  }, 2200);
+
+  const gained = heart.points * GAME.combo;
+  GAME.score += gained;
+  GAME.levelCaught++;
+  updateHUD();
+
+  showPopText('+' + gained + (GAME.combo > 1 ? ' ×' + GAME.combo : ''), cx, cy);
+  heart.el.remove();
+  removeHeartFromList(heart);
+  burstHeartsAtArea(cx, cy);
+
+  if (GAME.combo >= 3 && GAME.comboCount % 3 === 0) {
+    showComboBanner('COMBO x' + GAME.combo + '!');
+  }
+
+  // Повышение уровня
+  if (GAME.levelCaught >= GAME.levelTarget) {
+    levelUp();
+  }
+}
+
+function removeHeartFromList(h) {
+  const i = GAME.hearts.indexOf(h);
+  if (i >= 0) GAME.hearts.splice(i, 1);
+}
+
+function burstHeartsAtArea(x, y) {
+  // маленькие частицы прямо в игровом поле
+  const areaRect = gameArea.getBoundingClientRect();
+  for (let i = 0; i < 4; i++) {
+    const p = document.createElement('div');
+    p.className = 'click-heart';
+    p.textContent = pick(['💖','💕','✨']);
+    p.style.left = (areaRect.left + x) + 'px';
+    p.style.top  = (areaRect.top + y) + 'px';
+    p.style.fontSize = rand(10, 18) + 'px';
+    const angle = Math.random() * Math.PI * 2;
+    const dist = rand(20, 60);
+    p.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
+    p.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 900);
+  }
+}
+
+function showPopText(text, x, y) {
+  const p = document.createElement('div');
+  p.className = 'pop-particle';
+  p.textContent = text;
+  p.style.left = x + 'px';
+  p.style.top = y + 'px';
+  gameArea.appendChild(p);
+  setTimeout(() => p.remove(), 800);
+}
+
+function showComboBanner(text) {
+  const b = document.createElement('div');
+  b.className = 'combo-banner';
+  b.textContent = text;
+  gameArea.appendChild(b);
+  requestAnimationFrame(() => b.classList.add('show'));
+  setTimeout(() => b.remove(), 1000);
+}
+
+function levelUp() {
+  GAME.level++;
+  GAME.levelCaught = 0;
+  GAME.levelTarget = Math.min(20, 5 + GAME.level * 2);
+  GAME.spawnRate = Math.max(320, 900 - GAME.level * 70);
+  GAME.fallSpeed = Math.min(0.32, 0.12 + GAME.level * 0.02);
+  updateHUD();
+  showToast('🚀 Уровень ' + GAME.level + '!', 1800);
+  showComboBanner('LEVEL ' + GAME.level + '!');
+  spawnConfetti(30);
+  // ускоряем спавн — перезапускаем таймер
+  clearTimeout(GAME.spawnInterval);
+  scheduleSpawn();
+}
+
+function gameLoop(now) {
+  if (!GAME.running) return;
+  const dt = Math.min(60, now - GAME.lastTime);
+  GAME.lastTime = now;
+
+  const areaHeight = gameArea.clientHeight;
+  for (let i = GAME.hearts.length - 1; i >= 0; i--) {
+    const h = GAME.hearts[i];
+    if (h.caught) continue;
+    h.y += h.vy * dt;
+    h.el.style.transform = `translate(${h.x}px, ${h.y}px)`;
+
+    // упало вниз
+    if (h.y > areaHeight + 10) {
+      if (h.type !== 'bomb') {
+        // пропущенное сердечко сбрасывает комбо и отнимает жизнь (только нормальное)
+        GAME.combo = 1;
+        GAME.comboCount = 0;
+        if (h.type === 'normal') {
+          GAME.lives--;
+          updateHUD();
+          if (navigator.vibrate) navigator.vibrate(50);
+          if (GAME.lives <= 0) {
+            h.el.remove();
+            removeHeartFromList(h);
+            endGame();
+            return;
+          }
+        } else {
+          updateHUD();
+        }
+      }
+      h.el.remove();
+      removeHeartFromList(h);
+    }
+  }
+
+  GAME.rafId = requestAnimationFrame(gameLoop);
 }
 
 function endGame() {
-  gameRunning = false;
-  clearInterval(tickInterval);
-  clearInterval(spawnInterval);
-  removeActiveHeart();
+  GAME.running = false;
+  clearTimeout(GAME.spawnInterval);
+  cancelAnimationFrame(GAME.rafId);
+  GAME.hearts.forEach(h => h.el.remove());
+  GAME.hearts = [];
 
-  if (score > bestScore) {
-    bestScore = score;
-    localStorage.setItem('alina_best', bestScore);
+  if (GAME.score > bestScore) {
+    bestScore = GAME.score;
+    localStorage.setItem('alina_best2', bestScore);
     bestEl.textContent = bestScore;
-    showToast('🏆 Новый рекорд: ' + score + '! Ты невероятная 💖');
+    showToast('🏆 Новый рекорд: ' + GAME.score + '! Ты невероятная 💖', 3500);
+    spawnConfetti(120);
+    fireworks();
   } else {
-    showToast('Игра окончена! Счёт: ' + score + ' 💕');
+    showToast('Игра окончена! Счёт: ' + GAME.score + ' 💕', 3000);
   }
 
   gameOverlay.classList.remove('hidden');
   gameOverlay.innerHTML = `
-    <p style="font-size:1.1rem;">Счёт: <b>${score}</b> | Рекорд: <b>${bestScore}</b></p>
+    <h3>💔 Игра окончена</h3>
+    <p>Счёт: <b>${GAME.score}</b><br>Уровень: <b>${GAME.level}</b><br>Рекорд: <b>${bestScore}</b></p>
     <button class="btn btn-small" id="startGame">Играть снова</button>
   `;
   document.getElementById('startGame').addEventListener('click', startGame);
-  if (score >= 15) fireworks();
 }
 
 startGameBtn.addEventListener('click', startGame);
@@ -1126,8 +1687,7 @@ musicBtn.addEventListener('click', () => {
    ===================================================== */
 const fab = document.getElementById('fab');
 window.addEventListener('scroll', () => {
-  if (window.scrollY > 400) fab.classList.add('show');
-  else fab.classList.remove('show');
+  fab.classList.toggle('show', window.scrollY > 400);
 }, { passive: true });
 fab.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
@@ -1146,11 +1706,9 @@ finalBtn.addEventListener('click', () => {
 closeSurprise.addEventListener('click', () => finalSurprise.classList.remove('show'));
 
 /* =====================================================
-   Приветствия
+   Приветствия и бездействие
    ===================================================== */
-setTimeout(() => {
-  showToast('Привет, Алина! Этот сайт — для тебя 💖', 3500);
-}, 1200);
+setTimeout(() => showToast('Привет, Алина! Этот сайт — для тебя 💖', 3500), 1200);
 
 setTimeout(() => {
   const h = new Date().getHours();
@@ -1162,9 +1720,6 @@ setTimeout(() => {
   showToast(greeting, 3200);
 }, 5200);
 
-/* =====================================================
-   Комплименты по бездействию
-   ===================================================== */
 let idleTimer;
 const idlePhrases = [
   'Алина, ты сегодня особенно красивая ✨',
@@ -1176,7 +1731,7 @@ const idlePhrases = [
 function resetIdle() {
   clearTimeout(idleTimer);
   idleTimer = setTimeout(() => {
-    showToast(idlePhrases[(Math.random() * idlePhrases.length) | 0], 2800);
+    showToast(pick(idlePhrases), 2800);
     resetIdle();
   }, 25000);
 }
@@ -1189,7 +1744,7 @@ resetIdle();
    Остановка игры при скрытии вкладки
    ===================================================== */
 document.addEventListener('visibilitychange', () => {
-  if (document.hidden && gameRunning) endGame();
+  if (document.hidden && GAME.running) endGame();
 });
 </script>
 
