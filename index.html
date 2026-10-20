@@ -35,7 +35,6 @@
     100% { background-position: 0% 50%; }
   }
 
-  /* ===== Ночное небо со звёздами ===== */
   body.night {
     background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #1a1a2e);
     background-size: 400% 400%;
@@ -43,8 +42,7 @@
   }
 
   #starfield {
-    position: fixed;
-    inset: 0;
+    position: fixed; inset: 0;
     pointer-events: none;
     z-index: 0;
     opacity: 0;
@@ -63,7 +61,6 @@
     50% { opacity: 1; transform: scale(1.2); }
   }
 
-  /* ===== Плавающие сердечки ===== */
   .hearts {
     position: fixed; inset: 0;
     pointer-events: none;
@@ -85,7 +82,6 @@
     100% { transform: translateY(-115vh) rotate(360deg) scale(1.1); opacity: 0; }
   }
 
-  /* ===== Контейнер ===== */
   .container {
     position: relative;
     z-index: 2;
@@ -95,7 +91,6 @@
     text-align: center;
   }
 
-  /* ===== Хедер ===== */
   header { margin-bottom: 30px; animation: fadeInDown 1.2s ease; }
 
   h1 {
@@ -133,7 +128,6 @@
   }
   @keyframes blink { 50% { opacity: 0; } }
 
-  /* ===== Кнопки ===== */
   .btn {
     background: linear-gradient(45deg, #ff6b9d, #ff8fb1, #ffb6c1, #ff8fb1);
     background-size: 200% 200%;
@@ -193,7 +187,6 @@
   }
   .btn-ghost:hover { background: rgba(255,255,255,0.32); }
 
-  /* ===== Карточки ===== */
   .cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -255,7 +248,6 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* ===== Секции-панели ===== */
   .panel {
     background: var(--glass);
     backdrop-filter: blur(12px);
@@ -273,7 +265,6 @@
     font-weight: 700;
   }
 
-  /* ===== Love section ===== */
   .love-section { margin: 45px 0; }
 
   .love-message {
@@ -289,7 +280,6 @@
   }
   .love-message.show { opacity: 1; transform: scale(1); }
 
-  /* ===== Таймер ===== */
   .counter {
     display: flex;
     justify-content: center;
@@ -313,7 +303,6 @@
     letter-spacing: 1.5px;
   }
 
-  /* ===== Причина ===== */
   .reason-box {
     min-height: 110px;
     display: flex;
@@ -324,9 +313,7 @@
     transition: opacity 0.35s ease;
   }
 
-  /* =====================================================
-     КОЛЕСО ФОРТУНЫ
-     ===================================================== */
+  /* ============ КОЛЕСО ============ */
   .wheel-panel { overflow: visible; }
 
   .wheel-wrap {
@@ -399,7 +386,6 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform-origin: 0 0;
     font-size: clamp(0.62rem, 2.4vw, 0.82rem);
     font-weight: 700;
     color: #fff;
@@ -410,6 +396,7 @@
     padding-right: 10px;
     line-height: 1.1;
     white-space: nowrap;
+    transform-origin: 0 50%;
   }
 
   .wheel-result {
@@ -439,7 +426,7 @@
   }
 
   /* =====================================================
-     ИГРА "СЕРДЕЧНЫЙ ДОЖДЬ"
+     MATCH-3 ИГРА
      ===================================================== */
   .game-panel { position: relative; }
 
@@ -447,7 +434,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
     font-weight: 700;
     font-size: 0.98rem;
     gap: 8px;
@@ -467,68 +454,104 @@
   }
   .game-hud-item .label { opacity: 0.8; font-size: 0.75rem; font-weight: 600; margin-right: 4px; }
 
-  #lives { letter-spacing: 2px; }
-
-  .game-area {
+  /* Поле Match-3 */
+  .match3-wrap {
+    display: flex;
+    justify-content: center;
     position: relative;
-    height: 380px;
-    border-radius: 20px;
-    background:
-      radial-gradient(circle at 30% 20%, rgba(255,255,255,0.22), transparent 60%),
-      radial-gradient(circle at 70% 80%, rgba(255,180,220,0.25), transparent 60%),
-      rgba(255,255,255,0.1);
-    border: 1px dashed rgba(255,255,255,0.5);
-    overflow: hidden;
+    padding: 6px;
+    border-radius: 22px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.25);
     touch-action: none;
-    cursor: crosshair;
     user-select: none;
+    max-width: 100%;
+    margin: 0 auto;
   }
 
-  .game-area::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    box-shadow: inset 0 0 60px rgba(255,100,150,0.15);
-    border-radius: 20px;
+  .match3-board {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    gap: 4px;
+    width: min(100%, 440px);
+    aspect-ratio: 1 / 1;
+    position: relative;
   }
 
-  /* Падающие сердечки */
-  .fall-heart {
-    position: absolute;
-    top: -60px;
-    font-size: 2rem;
+  .m3-cell {
+    position: relative;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(1rem, 4.2vw, 1.9rem);
     cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
     user-select: none;
+    -webkit-user-select: none;
     will-change: transform;
-    filter: drop-shadow(0 3px 8px rgba(255,100,150,0.5));
-    transition: opacity 0.2s;
+  }
+  .m3-cell:hover { background: rgba(255,255,255,0.22); }
+  .m3-cell.selected {
+    background: rgba(255,255,255,0.42);
+    box-shadow: 0 0 0 2px #fff inset, 0 0 20px rgba(255,255,255,0.7);
+    transform: scale(1.06);
+  }
+  .m3-cell.hint {
+    animation: hintPulse 0.7s ease-in-out infinite;
+  }
+  @keyframes hintPulse {
+    0%, 100% { background: rgba(255,255,255,0.12); }
+    50% { background: rgba(255,255,200,0.4); }
+  }
+
+  .m3-emoji {
+    transition: transform 0.15s;
+    will-change: transform;
+    pointer-events: none;
     line-height: 1;
   }
-  .fall-heart.gold { font-size: 2.4rem; filter: drop-shadow(0 0 14px gold); }
-  .fall-heart.bomb { filter: drop-shadow(0 3px 8px rgba(0,0,0,0.5)); }
+  .m3-cell.pop .m3-emoji {
+    animation: popEmoji 0.3s ease forwards;
+  }
+  @keyframes popEmoji {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.4) rotate(15deg); }
+    100% { transform: scale(0); opacity: 0; }
+  }
+  .m3-cell.falling .m3-emoji {
+    animation: dropIn 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes dropIn {
+    0% { transform: translateY(-160%) scale(0.4); opacity: 0.4; }
+    100% { transform: translateY(0) scale(1); opacity: 1; }
+  }
 
-  .pop-particle {
+  /* Всплывающие очки над клетками */
+  .m3-pop {
     position: absolute;
     pointer-events: none;
     font-weight: 900;
     font-size: 1.1rem;
     color: #fff;
-    text-shadow: 0 2px 8px rgba(255,80,130,0.8);
-    animation: popText 0.8s ease-out forwards;
+    text-shadow: 0 2px 8px rgba(255,80,130,0.9);
+    animation: m3PopText 0.9s ease-out forwards;
     z-index: 10;
     white-space: nowrap;
   }
-  @keyframes popText {
+  @keyframes m3PopText {
     0% { transform: translate(-50%, 0) scale(0.6); opacity: 1; }
-    100% { transform: translate(-50%, -70px) scale(1.3); opacity: 0; }
+    100% { transform: translate(-50%, -60px) scale(1.4); opacity: 0; }
   }
 
-  .combo-banner {
+  /* Комбо-баннер */
+  .m3-combo {
     position: absolute;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%) scale(0.5);
-    font-size: clamp(1.6rem, 7vw, 2.6rem);
+    font-size: clamp(1.6rem, 8vw, 2.8rem);
     font-weight: 900;
     color: #fff;
     text-shadow: 0 4px 20px rgba(255,80,130,0.9), 0 0 40px rgba(255,255,255,0.6);
@@ -536,42 +559,47 @@
     opacity: 0;
     z-index: 15;
     white-space: nowrap;
+    text-align: center;
   }
-  .combo-banner.show { animation: comboPop 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+  .m3-combo.show { animation: comboPop 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
   @keyframes comboPop {
     0% { opacity: 0; transform: translate(-50%, -50%) scale(0.4) rotate(-8deg); }
     40% { opacity: 1; transform: translate(-50%, -50%) scale(1.15) rotate(2deg); }
     100% { opacity: 0; transform: translate(-50%, -70%) scale(1) rotate(0); }
   }
 
+  /* Оверлей игры */
   .game-overlay {
     position: absolute; inset: 0;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    background: rgba(255, 150, 180, 0.35);
-    backdrop-filter: blur(6px);
+    background: rgba(255, 150, 180, 0.5);
+    backdrop-filter: blur(8px);
     gap: 14px;
     padding: 22px;
     text-align: center;
     z-index: 20;
+    border-radius: 22px;
     transition: opacity 0.4s;
   }
   .game-overlay.hidden { display: none; }
-  .game-overlay h3 { font-size: clamp(1.2rem, 5vw, 1.7rem); }
-  .game-overlay p { max-width: 320px; line-height: 1.5; font-size: 0.95rem; }
-  .game-overlay .legend {
-    display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;
-    font-size: 0.85rem; opacity: 0.95;
-  }
-  .game-overlay .legend span { white-space: nowrap; }
+  .game-overlay h3 { font-size: clamp(1.3rem, 5.5vw, 1.9rem); }
+  .game-overlay p { max-width: 380px; line-height: 1.5; font-size: 0.95rem; }
 
-  /* Прогресс-бар уровня */
+  .game-overlay .legend {
+    display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+    font-size: 1.4rem;
+    letter-spacing: 4px;
+  }
+
+  /* Прогресс уровня (по очкам) */
   .level-bar {
-    height: 8px;
+    height: 10px;
     border-radius: 10px;
     background: rgba(255,255,255,0.2);
     margin-top: 12px;
     overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
   }
   .level-bar-fill {
     height: 100%;
@@ -580,6 +608,38 @@
     background: linear-gradient(90deg, #fff, #ffd1e8, #fff);
     transition: width 0.4s ease;
     box-shadow: 0 0 12px rgba(255,255,255,0.7);
+  }
+
+  /* Экран победы уровня */
+  .m3-screen {
+    position: absolute;
+    inset: 0;
+    z-index: 25;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 24px;
+    text-align: center;
+    border-radius: 22px;
+    background: radial-gradient(circle at center, rgba(255,200,220,0.95), rgba(255,150,180,0.98));
+    color: #fff;
+    box-shadow: 0 0 40px rgba(255,100,150,0.6) inset;
+    animation: m3ScreenIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .m3-screen.hidden { display: none; }
+  @keyframes m3ScreenIn {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .m3-screen h3 { font-size: clamp(1.3rem, 5.5vw, 2rem); }
+  .m3-screen p { max-width: 360px; line-height: 1.55; }
+  .m3-screen .stars { font-size: 2rem; letter-spacing: 4px; animation: starsIn 0.8s ease; }
+  @keyframes starsIn {
+    0% { transform: scale(0); opacity: 0; }
+    60% { transform: scale(1.3); }
+    100% { transform: scale(1); opacity: 1; }
   }
 
   /* ===== Toasts ===== */
@@ -616,7 +676,6 @@
     to { opacity: 0; transform: translateY(20px) scale(0.9); }
   }
 
-  /* ===== Финал ===== */
   footer {
     margin-top: 50px;
     font-size: 1.05rem;
@@ -634,7 +693,6 @@
     -webkit-text-fill-color: transparent;
   }
 
-  /* ===== Клик-сердечки ===== */
   .click-heart {
     position: fixed;
     pointer-events: none;
@@ -647,7 +705,6 @@
     100% { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0.2); opacity: 0; }
   }
 
-  /* ===== Конфетти ===== */
   .confetti {
     position: fixed;
     width: 8px; height: 8px;
@@ -660,7 +717,6 @@
     100% { transform: translateY(105vh) rotate(720deg); opacity: 0; }
   }
 
-  /* ===== Плавающая кнопка "наверх" ===== */
   .fab {
     position: fixed;
     bottom: 22px; right: 22px;
@@ -681,7 +737,6 @@
   .fab.show { opacity: 1; pointer-events: auto; }
   .fab:hover { transform: scale(1.1) translateY(-3px); }
 
-  /* ===== Музыка ===== */
   .music-btn {
     position: fixed;
     top: 16px; right: 16px;
@@ -702,7 +757,6 @@
   .music-btn.playing { animation: spin 3s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ===== Финальный сюрприз ===== */
   .final-surprise {
     position: fixed;
     inset: 0;
@@ -731,7 +785,6 @@
     margin-bottom: 26px;
   }
 
-  /* ===== Адаптив ===== */
   @media (max-width: 600px) {
     .container { padding: 28px 15px 50px; }
     .cards { gap: 14px; }
@@ -739,17 +792,17 @@
     .btn { padding: 15px 30px; font-size: 1rem; }
     .btn-row { gap: 10px; }
     .panel { padding: 24px 16px; }
-    .game-area { height: 320px; }
     .music-btn { top: 12px; right: 12px; width: 42px; height: 42px; }
     .fab { bottom: 16px; right: 16px; width: 46px; height: 46px; }
-    .fall-heart { font-size: 1.7rem; }
-    .fall-heart.gold { font-size: 2rem; }
     .game-hud-item { padding: 6px 11px; min-width: 72px; font-size: 0.85rem; }
+    .match3-board { gap: 3px; }
+    .m3-cell { font-size: clamp(0.95rem, 5vw, 1.5rem); border-radius: 8px; }
   }
   @media (max-width: 380px) {
     .card .emoji { font-size: 1.8rem; }
     .wheel-label { font-size: 0.55rem; }
     .game-hud-item { min-width: 64px; font-size: 0.8rem; }
+    .match3-board { gap: 2px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -815,9 +868,7 @@
     <button class="btn btn-small" id="reasonBtn" style="margin-top:20px;">Ещё одну причину 💗</button>
   </section>
 
-  <!-- ============================================
-       КОЛЕСО ФОРТУНЫ
-       ============================================ -->
+  <!-- ============ КОЛЕСО ФОРТУНЫ ============ -->
   <section class="panel wheel-panel">
     <div class="panel-title">🎡 Колесо фортуны</div>
     <p style="margin-bottom: 8px; opacity: 0.9; font-size: 0.95rem;">
@@ -839,37 +890,37 @@
     </div>
   </section>
 
-  <!-- ============================================
-       ИГРА "СЕРДЕЧНЫЙ ДОЖДЬ"
-       ============================================ -->
+  <!-- =====================================================
+       ИГРА "СЕРДЕЧНЫЙ MATCH-3"
+       ===================================================== -->
   <section class="panel game-panel">
-    <div class="panel-title">🎮 Сердечный дождь</div>
+    <div class="panel-title">🎮 Сердечный Match-3</div>
 
     <div class="game-hud">
-      <div class="game-hud-item"><span class="label">Счёт</span><span id="score">0</span></div>
-      <div class="game-hud-item"><span class="label">Уровень</span><span id="level">1</span></div>
-      <div class="game-hud-item"><span class="label">Комбо</span><span id="combo">x1</span></div>
-      <div class="game-hud-item"><span class="label">Жизни</span><span id="lives">❤️❤️❤️</span></div>
+      <div class="game-hud-item" id="hudScore"><span class="label">Счёт</span><span id="score">0</span></div>
+      <div class="game-hud-item" id="hudLevel"><span class="label">Уровень</span><span id="level">1</span></div>
+      <div class="game-hud-item" id="hudMoves"><span class="label">Ходы</span><span id="moves">20</span></div>
+      <div class="game-hud-item" id="hudCombo"><span class="label">Макс.комбо</span><span id="combo">x0</span></div>
     </div>
 
     <div class="level-bar"><div class="level-bar-fill" id="levelBar"></div></div>
 
-    <div class="game-area" id="gameArea" style="margin-top:12px;">
+    <div class="match3-wrap" id="match3Wrap" style="margin-top:14px;">
+      <div class="match3-board" id="match3Board"></div>
+
       <div class="game-overlay" id="gameOverlay">
-        <h3>💖 Сердечный дождь</h3>
-        <p>Лови падающие сердечки! Чем больше поймаешь — тем выше уровень.</p>
-        <div class="legend">
-          <span>💖 +1</span>
-          <span>⭐ +5 (золотое)</span>
-          <span>💣 −1 жизнь</span>
-        </div>
-        <p style="font-size:0.85rem; opacity:0.9;">3 жизни. Комбо даёт бонусные очки!</p>
+        <h3>💖 Сердечный Match-3</h3>
+        <p>Меняй местами соседние сердечки, чтобы собрать <b>3 и больше в ряд</b>. Собирай комбо и проходи уровни!</p>
+        <div class="legend">💖 💕 💗 💓 💞 🌸</div>
+        <p style="font-size:0.85rem; opacity:0.9;">За уровень — <b id="targetInfo">500</b> очков</p>
         <button class="btn btn-small" id="startGame">Начать игру</button>
       </div>
+
+      <div class="m3-screen hidden" id="levelScreen"></div>
     </div>
 
-    <p style="margin-top:12px; font-size:0.85rem; opacity:0.85;">
-      🏆 Рекорд: <b id="best">0</b>
+    <p style="margin-top:14px; font-size:0.85rem; opacity:0.85;">
+      🏆 Рекорд: <b id="best">0</b> &nbsp;•&nbsp; ⭐ Лучший уровень: <b id="bestLevel">1</b>
     </p>
   </section>
 
@@ -893,8 +944,8 @@
    НАСТРОЙКИ
    ===================================================== */
 const CONFIG = {
-  startDate: '2023-01-01T00:00:00', // дата начала отношений
-  musicUrl: ''                      // свой .mp3 (опционально)
+  startDate: '2023-01-01T00:00:00',
+  musicUrl: ''
 };
 
 /* =====================================================
@@ -903,9 +954,10 @@ const CONFIG = {
 const rand = (min, max) => Math.random() * (max - min) + min;
 const randInt = (min, max) => Math.floor(rand(min, max + 1));
 const pick = arr => arr[(Math.random() * arr.length) | 0];
+const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 /* =====================================================
-   Плавающие сердечки фона
+   ФОНОВЫЕ СЕРДЕЧКИ
    ===================================================== */
 const heartsContainer = document.getElementById('hearts');
 const heartEmojis = ['💖','💕','💗','💓','💝','🌸','✨','💘','🌷','💞'];
@@ -927,7 +979,7 @@ setInterval(createHeart, 750);
 for (let i = 0; i < 10; i++) setTimeout(createHeart, i * 200);
 
 /* =====================================================
-   Печатный подзаголовок
+   ПОДЗАГОЛОВОК
    ===================================================== */
 const subtitleEl = document.getElementById('subtitle');
 const subtitleText = 'Ты — самое тёплое, что случилось со мной 💗';
@@ -946,7 +998,7 @@ function typeSubtitle() {
 setTimeout(typeSubtitle, 600);
 
 /* =====================================================
-   Кнопка любви
+   LOVE
    ===================================================== */
 const loveMessages = [
   'Алина, ты — моё сердце 💖',
@@ -979,7 +1031,7 @@ loveBtn.addEventListener('click', () => {
 });
 
 /* =====================================================
-   Причины
+   ПРИЧИНЫ
    ===================================================== */
 const reasons = [
   'За твой смех, от которого тепло на душе 🌸',
@@ -1012,7 +1064,7 @@ reasonBtn.addEventListener('click', () => {
 });
 
 /* =====================================================
-   Взрыв сердечек
+   ВЗРЫВ СЕРДЕЧЕК
    ===================================================== */
 const clickHearts = ['💖','💕','💗','💓','✨','🌸','💞','💘'];
 
@@ -1041,12 +1093,12 @@ function burstHearts(el, count = 10) {
 }
 
 document.addEventListener('click', (e) => {
-  if (e.target.closest('button, a, .card, .fall-heart, .wheel, .wheel-wrap')) return;
+  if (e.target.closest('button, a, .card, .m3-cell, .wheel, .wheel-wrap, .match3-board')) return;
   spawnClickHeart(e.clientX, e.clientY);
 });
 
 /* =====================================================
-   Таймер
+   ТАЙМЕР
    ===================================================== */
 const startDate = new Date(CONFIG.startDate);
 const els = {
@@ -1059,7 +1111,7 @@ let prevSec = -1;
 
 function updateCounter() {
   const now = new Date();
-  let diff = Math.max(0, now - startDate);
+  const diff = Math.max(0, now - startDate);
   const totalSeconds = Math.floor(diff / 1000);
   const days = Math.floor(totalSeconds / 86400);
   const hours = Math.floor((totalSeconds % 86400) / 3600);
@@ -1081,7 +1133,7 @@ updateCounter();
 setInterval(updateCounter, 1000);
 
 /* =====================================================
-   Пасхалки
+   ПАСХАЛКИ
    ===================================================== */
 const title = document.getElementById('title');
 let easterEggOn = false;
@@ -1108,7 +1160,7 @@ title.addEventListener('pointerdown', () => {
 );
 
 /* =====================================================
-   Карточки
+   КАРТОЧКИ
    ===================================================== */
 document.querySelectorAll('.card').forEach(card => {
   card.addEventListener('click', () => {
@@ -1119,7 +1171,7 @@ document.querySelectorAll('.card').forEach(card => {
 });
 
 /* =====================================================
-   Тосты
+   ТОСТЫ
    ===================================================== */
 const toastContainer = document.getElementById('toastContainer');
 function showToast(text, duration = 2800) {
@@ -1134,7 +1186,7 @@ function showToast(text, duration = 2800) {
 }
 
 /* =====================================================
-   Ночной режим
+   НОЧНОЙ РЕЖИМ
    ===================================================== */
 const nightBtn = document.getElementById('nightBtn');
 const starfield = document.getElementById('starfield');
@@ -1169,7 +1221,7 @@ nightBtn.addEventListener('click', () => {
 if (isNight) nightBtn.textContent = '☀️ Дневной режим';
 
 /* =====================================================
-   Конфетти
+   КОНФЕТТИ
    ===================================================== */
 const confettiBtn = document.getElementById('confettiBtn');
 const confettiColors = ['#ff6b9d','#ffb6c1','#ffd1e8','#a18cd1','#fbc2eb','#fff','#ffcc00'];
@@ -1198,7 +1250,7 @@ confettiBtn.addEventListener('click', () => {
 });
 
 /* =====================================================
-   Фейерверк
+   ФЕЙЕРВЕРК
    ===================================================== */
 function fireworks() {
   for (let k = 0; k < 3; k++) {
@@ -1240,35 +1292,24 @@ const wheelSegments = [
 const wheelEl = document.getElementById('wheel');
 const spinBtn = document.getElementById('spinBtn');
 const wheelResult = document.getElementById('wheelResult');
-
-// Построение секторов (8 = 45°)
 const SEG_ANGLE = 360 / wheelSegments.length;
 let wheelLabels = [];
 
 function buildWheel() {
-  // фон-градиент уже задан через conic-gradient в CSS.
-  // расставим подписи
   wheelLabels.forEach(l => l.remove());
   wheelLabels = [];
-
   wheelSegments.forEach((seg, i) => {
     const midAngle = i * SEG_ANGLE + SEG_ANGLE / 2;
     const label = document.createElement('div');
     label.className = 'wheel-label';
     label.textContent = seg.label;
-    // Ставим подпись по центру сектора вдоль радиуса
-    // origin 0 0 = центр колеса
-    label.style.transform = `rotate(${midAngle - 90}deg) translate(0, -50%)`;
     label.style.left = '50%';
     label.style.top = '50%';
-    // Сдвиг к краю: благодаря width 44% и text-align:right — подпись уходит наружу
-    label.style.transformOrigin = '0 50%';
     label.style.transform = `rotate(${midAngle}deg) translate(6%, 0)`;
     wheelEl.appendChild(label);
     wheelLabels.push(label);
   });
 }
-
 buildWheel();
 
 let currentRotation = 0;
@@ -1281,14 +1322,8 @@ spinBtn.addEventListener('click', () => {
   wheelResult.classList.remove('win');
   wheelResult.textContent = 'Колесо крутится… 🎡';
 
-  // Случайный победитель
   const winnerIdx = randInt(0, wheelSegments.length - 1);
-
-  // Угол: центр сектора победителя должен оказаться под стрелкой (сверху, -90°)
-  // Сектор i занимает [i*SEG, (i+1)*SEG] градусов в системе колеса.
-  // Нам нужно, чтобы после поворота центр сектора оказался на -90° (стрелка сверху).
   const segCenter = winnerIdx * SEG_ANGLE + SEG_ANGLE / 2;
-  // Сколько нужно добавить к текущему повороту
   const targetRotation = 360 * randInt(4, 6) + (360 - segCenter);
 
   currentRotation += targetRotation;
@@ -1297,318 +1332,547 @@ spinBtn.addEventListener('click', () => {
   setTimeout(() => {
     spinning = false;
     spinBtn.disabled = false;
-
     const result = wheelSegments[winnerIdx];
     wheelResult.textContent = result.text;
     wheelResult.classList.add('win');
-    confettiBurstOnElement(wheelResult);
+    const rect = wheelResult.getBoundingClientRect();
+    for (let i = 0; i < 14; i++) spawnClickHeart(rect.left + rect.width / 2, rect.top + rect.height / 2);
     spawnConfetti(60);
     showToast('🎉 Твой приз: ' + result.label, 3200);
     if (navigator.vibrate) navigator.vibrate([30, 40, 60]);
   }, 5200);
 });
 
-function confettiBurstOnElement(el) {
-  const rect = el.getBoundingClientRect();
-  const cx = rect.left + rect.width / 2;
-  const cy = rect.top + rect.height / 2;
-  for (let i = 0; i < 14; i++) spawnClickHeart(cx, cy);
-}
-
 /* =====================================================
-   ИГРА "СЕРДЕЧНЫЙ ДОЖДЬ"
+   ИГРА "СЕРДЕЧНЫЙ MATCH-3"
    ===================================================== */
-const gameArea = document.getElementById('gameArea');
-const gameOverlay = document.getElementById('gameOverlay');
-const startGameBtn = document.getElementById('startGame');
-const scoreEl = document.getElementById('score');
-const levelEl = document.getElementById('level');
-const comboEl = document.getElementById('combo');
-const livesEl = document.getElementById('lives');
-const bestEl = document.getElementById('best');
-const levelBar = document.getElementById('levelBar');
-
-let bestScore = parseInt(localStorage.getItem('alina_best2') || '0', 10);
-bestEl.textContent = bestScore;
-
-const GAME = {
-  running: false,
+const M3 = {
+  ROWS: 8,
+  COLS: 8,
+  TYPES: ['💖','💕','💗','💓','💞','🌸'],
+  board: [],          // 2D массив { type, el }
+  selected: null,     // { r, c }
   score: 0,
   level: 1,
-  lives: 3,
-  combo: 1,
-  comboCount: 0,
-  comboTimeout: null,
-  levelProgress: 0,      // 0..1 внутри уровня
-  levelTarget: 5,        // сколько сердечек для следующего уровня
-  levelCaught: 0,
-  spawnInterval: null,
-  rafId: null,
-  hearts: [],            // {el, x, y, vy, type, points}
-  lastTime: 0,
-  spawnRate: 900,        // мс между спавнами
-  fallSpeed: 0.12        // скорость в px/ms (будет расти)
+  moves: 20,
+  maxCombo: 0,
+  target: 500,        // очки для прохождения уровня
+  running: false,
+  busy: false,
+  bestScore: parseInt(localStorage.getItem('alina_best3') || '0', 10),
+  bestLevel: parseInt(localStorage.getItem('alina_bestLevel') || '1', 10),
 };
 
+// DOM
+const boardEl = document.getElementById('match3Board');
+const overlayEl = document.getElementById('gameOverlay');
+const startBtn = document.getElementById('startGame');
+const scoreEl = document.getElementById('score');
+const levelEl = document.getElementById('level');
+const movesEl = document.getElementById('moves');
+const comboEl = document.getElementById('combo');
+const bestEl = document.getElementById('best');
+const bestLevelEl = document.getElementById('bestLevel');
+const levelBar = document.getElementById('levelBar');
+const targetInfo = document.getElementById('targetInfo');
+const levelScreen = document.getElementById('levelScreen');
+const hudScore = document.getElementById('hudScore');
+const hudLevel = document.getElementById('hudLevel');
+const hudMoves = document.getElementById('hudMoves');
+const hudCombo = document.getElementById('hudCombo');
+
+bestEl.textContent = M3.bestScore;
+bestLevelEl.textContent = M3.bestLevel;
+
 function updateHUD() {
-  scoreEl.textContent = GAME.score;
-  levelEl.textContent = GAME.level;
-  comboEl.textContent = 'x' + GAME.combo;
-  livesEl.textContent = '❤️'.repeat(GAME.lives) || '💔';
-  levelBar.style.width = Math.min(100, (GAME.levelCaught / GAME.levelTarget) * 100) + '%';
+  scoreEl.textContent = M3.score;
+  levelEl.textContent = M3.level;
+  movesEl.textContent = M3.moves;
+  comboEl.textContent = 'x' + M3.maxCombo;
+  const pct = Math.min(100, (M3.score / M3.target) * 100);
+  levelBar.style.width = pct + '%';
+  targetInfo.textContent = M3.target;
 }
 
-function resetGame() {
-  // очистить поле
-  GAME.hearts.forEach(h => h.el.remove());
-  GAME.hearts = [];
-  gameArea.querySelectorAll('.pop-particle, .combo-banner').forEach(n => n.remove());
-
-  GAME.score = 0;
-  GAME.level = 1;
-  GAME.lives = 3;
-  GAME.combo = 1;
-  GAME.comboCount = 0;
-  GAME.levelCaught = 0;
-  GAME.levelTarget = 5;
-  GAME.spawnRate = 900;
-  GAME.fallSpeed = 0.12;
-  clearTimeout(GAME.comboTimeout);
-  updateHUD();
+function pulse(el) {
+  el.classList.add('hit');
+  setTimeout(() => el.classList.remove('hit'), 250);
 }
 
-function startGame() {
-  if (GAME.running) return;
-  resetGame();
-  GAME.running = true;
-  gameOverlay.classList.add('hidden');
+/* --- Построение поля --- */
+function randType() { return pick(M3.TYPES); }
 
-  GAME.lastTime = performance.now();
-  scheduleSpawn();
-  GAME.rafId = requestAnimationFrame(gameLoop);
+function createBoard() {
+  boardEl.innerHTML = '';
+  M3.board = [];
+  for (let r = 0; r < M3.ROWS; r++) {
+    const row = [];
+    for (let c = 0; c < M3.COLS; c++) {
+      const cell = document.createElement('div');
+      cell.className = 'm3-cell';
+      cell.dataset.r = r;
+      cell.dataset.c = c;
+      const emoji = document.createElement('span');
+      emoji.className = 'm3-emoji';
+      cell.appendChild(emoji);
+      boardEl.appendChild(cell);
+      row.push({ type: null, el: cell, emojiEl: emoji });
+    }
+    M3.board.push(row);
+  }
+  // заполняем без готовых совпадений
+  for (let r = 0; r < M3.ROWS; r++) {
+    for (let c = 0; c < M3.COLS; c++) {
+      const bad = new Set();
+      if (c >= 2 && M3.board[r][c-1].type === M3.board[r][c-2].type)
+        bad.add(M3.board[r][c-1].type);
+      if (r >= 2 && M3.board[r-1][c].type === M3.board[r-2][c].type)
+        bad.add(M3.board[r-1][c].type);
+      let t;
+      let guard = 0;
+      do { t = randType(); guard++; }
+      while (bad.has(t) && guard < 30);
+      setType(r, c, t);
+    }
+  }
 }
 
-function scheduleSpawn() {
-  if (!GAME.running) return;
-  spawnFallingHeart();
-  GAME.spawnInterval = setTimeout(scheduleSpawn, GAME.spawnRate);
+function setType(r, c, type, animate = false) {
+  M3.board[r][c].type = type;
+  const e = M3.board[r][c].emojiEl;
+  e.textContent = type;
+  if (animate) {
+    e.parentElement.classList.add('falling');
+    setTimeout(() => e.parentElement.classList.remove('falling'), 320);
+  }
 }
 
-function spawnFallingHeart() {
-  const rect = gameArea.getBoundingClientRect();
-  if (!rect.width) return;
-
-  // выбор типа
-  const r = Math.random();
-  let type = 'normal', points = 1, emoji = pick(['💖','💕','💗','💓','💞','🌸','✨']);
-  if (r < 0.08) { type = 'gold';  points = 5; emoji = '⭐'; }
-  else if (r < 0.22) { type = 'bomb'; points = -1; emoji = '💣'; }
-
-  const el = document.createElement('div');
-  el.className = 'fall-heart' + (type === 'gold' ? ' gold' : '') + (type === 'bomb' ? ' bomb' : '');
-  el.textContent = emoji;
-  el.style.left = '0px';
-  el.style.top = '0px';
-  gameArea.appendChild(el);
-
-  const x = rand(6, rect.width - 50);
-  const y = -50;
-  const vy = GAME.fallSpeed * rand(0.85, 1.25) * (type === 'gold' ? 1.3 : 1);
-
-  const heart = { el, x, y, vy, type, points, caught: false };
-  GAME.hearts.push(heart);
-  el.style.transform = `translate(${x}px, ${y}px)`;
-
-  el.addEventListener('pointerdown', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!GAME.running || heart.caught) return;
-    heart.caught = true;
-    handleCatch(heart);
-  });
+/* --- Поиск совпадений --- */
+function findMatches() {
+  const matched = new Set();
+  // горизонтальные
+  for (let r = 0; r < M3.ROWS; r++) {
+    let run = 1;
+    for (let c = 1; c <= M3.COLS; c++) {
+      const same = c < M3.COLS && M3.board[r][c].type === M3.board[r][c-1].type;
+      if (same) run++;
+      else {
+        if (run >= 3) {
+          for (let k = c - run; k < c; k++) matched.add(r + ',' + k);
+        }
+        run = 1;
+      }
+    }
+  }
+  // вертикальные
+  for (let c = 0; c < M3.COLS; c++) {
+    let run = 1;
+    for (let r = 1; r <= M3.ROWS; r++) {
+      const same = r < M3.ROWS && M3.board[r][c].type === M3.board[r-1][c].type;
+      if (same) run++;
+      else {
+        if (run >= 3) {
+          for (let k = r - run; k < r; k++) matched.add(k + ',' + c);
+        }
+        run = 1;
+      }
+    }
+  }
+  return matched;
 }
 
-function handleCatch(heart) {
-  const elRect = heart.el.getBoundingClientRect();
-  const areaRect = gameArea.getBoundingClientRect();
-  const cx = elRect.left - areaRect.left + elRect.width / 2;
-  const cy = elRect.top - areaRect.top + elRect.height / 2;
+/* --- Поиск возможных ходов --- */
+function findHint() {
+  for (let r = 0; r < M3.ROWS; r++) {
+    for (let c = 0; c < M3.COLS; c++) {
+      // правый сосед
+      if (c + 1 < M3.COLS) {
+        swapTypes(r, c, r, c + 1);
+        const m = findMatches();
+        swapTypes(r, c, r, c + 1);
+        if (m.size > 0) return [r, c, r, c + 1];
+      }
+      // нижний сосед
+      if (r + 1 < M3.ROWS) {
+        swapTypes(r, c, r + 1, c);
+        const m = findMatches();
+        swapTypes(r, c, r + 1, c);
+        if (m.size > 0) return [r, c, r + 1, c];
+      }
+    }
+  }
+  return null;
+}
 
-  if (heart.type === 'bomb') {
-    GAME.lives--;
-    GAME.combo = 1;
-    GAME.comboCount = 0;
-    updateHUD();
-    showPopText('−1 ❤️', cx, cy);
-    heart.el.remove();
-    removeHeartFromList(heart);
-    if (navigator.vibrate) navigator.vibrate(80);
-    if (GAME.lives <= 0) endGame();
+function swapTypes(r1, c1, r2, c2) {
+  const t1 = M3.board[r1][c1].type;
+  M3.board[r1][c1].type = M3.board[r2][c2].type;
+  M3.board[r2][c2].type = t1;
+}
+
+function swapVisual(r1, c1, r2, c2) {
+  const e1 = M3.board[r1][c1].emojiEl;
+  const e2 = M3.board[r2][c2].emojiEl;
+  const t1 = e1.textContent;
+  e1.textContent = e2.textContent;
+  e2.textContent = t1;
+}
+
+/* --- Обработка клика --- */
+boardEl.addEventListener('pointerdown', (e) => {
+  if (!M3.running || M3.busy) return;
+  const cell = e.target.closest('.m3-cell');
+  if (!cell) return;
+  const r = +cell.dataset.r;
+  const c = +cell.dataset.c;
+
+  if (!M3.selected) {
+    M3.selected = { r, c };
+    cell.classList.add('selected');
+    return;
+  }
+  const s = M3.selected;
+  cell.classList.add('selected');
+
+  // Клик по той же клетке — снять выбор
+  if (s.r === r && s.c === c) {
+    clearSelection();
     return;
   }
 
-  // нормальное или золотое
-  GAME.comboCount++;
-  if (GAME.comboCount >= 3) {
-    GAME.combo = Math.min(8, 1 + Math.floor(GAME.comboCount / 3));
+  // Соседняя?
+  const dr = Math.abs(s.r - r);
+  const dc = Math.abs(s.c - c);
+  if (dr + dc === 1) {
+    M3.selected = null;
+    trySwap(s.r, s.c, r, c);
+  } else {
+    clearSelection();
+    M3.selected = { r, c };
+    cell.classList.add('selected');
   }
-  // Сброс комбо по таймеру
-  clearTimeout(GAME.comboTimeout);
-  GAME.comboTimeout = setTimeout(() => {
-    GAME.combo = 1;
-    GAME.comboCount = 0;
-    updateHUD();
-  }, 2200);
+});
 
-  const gained = heart.points * GAME.combo;
-  GAME.score += gained;
-  GAME.levelCaught++;
+function clearSelection() {
+  if (M3.selected) {
+    const { r, c } = M3.selected;
+    M3.board[r]?.[c]?.el.classList.remove('selected');
+  }
+  M3.selected = null;
+  boardEl.querySelectorAll('.m3-cell.selected').forEach(el => el.classList.remove('selected'));
+}
+
+async function trySwap(r1, c1, r2, c2) {
+  if (M3.busy) return;
+  M3.busy = true;
+  clearSelection();
+
+  // визуальный своп
+  swapTypes(r1, c1, r2, c2);
+  swapVisual(r1, c1, r2, c2);
+
+  await sleep(180);
+
+  const matches = findMatches();
+  if (matches.size === 0) {
+    // откат
+    swapTypes(r1, c1, r2, c2);
+    swapVisual(r1, c1, r2, c2);
+    await sleep(180);
+    M3.busy = false;
+    return;
+  }
+
+  M3.moves--;
   updateHUD();
+  pulse(hudMoves);
 
-  showPopText('+' + gained + (GAME.combo > 1 ? ' ×' + GAME.combo : ''), cx, cy);
-  heart.el.remove();
-  removeHeartFromList(heart);
-  burstHeartsAtArea(cx, cy);
+  await resolveMatches();
 
-  if (GAME.combo >= 3 && GAME.comboCount % 3 === 0) {
-    showComboBanner('COMBO x' + GAME.combo + '!');
-  }
+  M3.busy = false;
 
-  // Повышение уровня
-  if (GAME.levelCaught >= GAME.levelTarget) {
-    levelUp();
-  }
-}
-
-function removeHeartFromList(h) {
-  const i = GAME.hearts.indexOf(h);
-  if (i >= 0) GAME.hearts.splice(i, 1);
-}
-
-function burstHeartsAtArea(x, y) {
-  // маленькие частицы прямо в игровом поле
-  const areaRect = gameArea.getBoundingClientRect();
-  for (let i = 0; i < 4; i++) {
-    const p = document.createElement('div');
-    p.className = 'click-heart';
-    p.textContent = pick(['💖','💕','✨']);
-    p.style.left = (areaRect.left + x) + 'px';
-    p.style.top  = (areaRect.top + y) + 'px';
-    p.style.fontSize = rand(10, 18) + 'px';
-    const angle = Math.random() * Math.PI * 2;
-    const dist = rand(20, 60);
-    p.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
-    p.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
-    document.body.appendChild(p);
-    setTimeout(() => p.remove(), 900);
+  if (M3.score >= M3.target) {
+    await levelComplete();
+  } else if (M3.moves <= 0) {
+    endGame();
+  } else {
+    // проверим, есть ли ходы; если нет — перемешаем
+    if (!findHint()) {
+      showToast('Ходов нет — перемешиваю 💫', 2000);
+      await reshuffle();
+    }
   }
 }
 
-function showPopText(text, x, y) {
+async function resolveMatches() {
+  let combo = 0;
+  while (true) {
+    const matches = findMatches();
+    if (matches.size === 0) break;
+    combo++;
+    if (combo > M3.maxCombo) M3.maxCombo = combo;
+    updateHUD();
+
+    // очки: 10 за клетку × комбо
+    const gained = matches.size * 10 * combo;
+    M3.score += gained;
+
+    // всплывающие очки
+    const firstKey = [...matches][0];
+    const [fr, fc] = firstKey.split(',').map(Number);
+    const cellRect = M3.board[fr][fc].el.getBoundingClientRect();
+    const wrapRect = boardEl.getBoundingClientRect();
+    showPopAt(
+      boardEl,
+      cellRect.left - wrapRect.left + cellRect.width / 2,
+      cellRect.top - wrapRect.top + cellRect.height / 2,
+      '+' + gained
+    );
+
+    if (combo >= 2) {
+      showComboBanner(boardEl, 'COMBO x' + combo + '!');
+    }
+
+    // анимация + удаление
+    matches.forEach(key => {
+      const [r, c] = key.split(',').map(Number);
+      const cell = M3.board[r][c].el;
+      cell.classList.add('pop');
+      // на мобильных вибро на комбо
+      if (combo > 1 && navigator.vibrate) navigator.vibrate(15);
+    });
+
+    // эффект сердечек с центра доски
+    for (let i = 0; i < Math.min(6, combo + 2); i++) {
+      const rect = boardEl.getBoundingClientRect();
+      spawnClickHeart(
+        rect.left + rect.width / 2 + rand(-60, 60),
+        rect.top + rect.height / 2 + rand(-60, 60)
+      );
+    }
+
+    await sleep(320);
+
+    matches.forEach(key => {
+      const [r, c] = key.split(',').map(Number);
+      M3.board[r][c].type = null;
+      M3.board[r][c].emojiEl.textContent = '';
+      M3.board[r][c].el.classList.remove('pop');
+    });
+
+    // гравитация
+    await applyGravity();
+    updateHUD();
+    pulse(hudScore);
+  }
+  if (combo > 0) pulse(hudCombo);
+}
+
+async function applyGravity() {
+  for (let c = 0; c < M3.COLS; c++) {
+    let write = M3.ROWS - 1;
+    for (let r = M3.ROWS - 1; r >= 0; r--) {
+      if (M3.board[r][c].type !== null) {
+        if (write !== r) {
+          setType(write, c, M3.board[r][c].type);
+          M3.board[r][c].type = null;
+          M3.board[r][c].emojiEl.textContent = '';
+          M3.board[write][c].emojiEl.parentElement.classList.add('falling');
+          setTimeout(() => M3.board[write][c].emojiEl.parentElement.classList.remove('falling'), 320);
+        }
+        write--;
+      }
+    }
+    // заполнить пустые сверху
+    for (let r = write; r >= 0; r--) {
+      setType(r, c, randType(), true);
+    }
+  }
+  await sleep(280);
+}
+
+async function reshuffle() {
+  M3.busy = true;
+  // собираем типы, перемешиваем, ставим без матчей
+  const allTypes = [];
+  for (let r = 0; r < M3.ROWS; r++)
+    for (let c = 0; c < M3.COLS; c++)
+      allTypes.push(M3.board[r][c].type);
+
+  // Fisher-Yates
+  for (let i = allTypes.length - 1; i > 0; i--) {
+    const j = (Math.random() * (i + 1)) | 0;
+    [allTypes[i], allTypes[j]] = [allTypes[j], allTypes[i]];
+  }
+
+  let idx = 0;
+  for (let r = 0; r < M3.ROWS; r++) {
+    for (let c = 0; c < M3.COLS; c++) {
+      setType(r, c, allTypes[idx++]);
+      M3.board[r][c].emojiEl.parentElement.classList.add('falling');
+      setTimeout(() => M3.board[r][c].emojiEl.parentElement.classList.remove('falling'), 320);
+    }
+  }
+  await sleep(300);
+
+  // если получились совпадения — разруливаем
+  if (findMatches().size > 0) {
+    await resolveMatches();
+  }
+
+  // если всё равно нет ходов — рекурсивно
+  if (!findHint()) {
+    await reshuffle();
+  } else {
+    M3.busy = false;
+  }
+}
+
+/* Всплывающие очки в контейнере */
+function showPopAt(parent, x, y, text) {
   const p = document.createElement('div');
-  p.className = 'pop-particle';
+  p.className = 'm3-pop';
   p.textContent = text;
   p.style.left = x + 'px';
   p.style.top = y + 'px';
-  gameArea.appendChild(p);
-  setTimeout(() => p.remove(), 800);
+  parent.appendChild(p);
+  setTimeout(() => p.remove(), 900);
 }
 
-function showComboBanner(text) {
+function showComboBanner(parent, text) {
   const b = document.createElement('div');
-  b.className = 'combo-banner';
+  b.className = 'm3-combo';
   b.textContent = text;
-  gameArea.appendChild(b);
+  parent.appendChild(b);
   requestAnimationFrame(() => b.classList.add('show'));
-  setTimeout(() => b.remove(), 1000);
+  setTimeout(() => b.remove(), 1050);
 }
 
-function levelUp() {
-  GAME.level++;
-  GAME.levelCaught = 0;
-  GAME.levelTarget = Math.min(20, 5 + GAME.level * 2);
-  GAME.spawnRate = Math.max(320, 900 - GAME.level * 70);
-  GAME.fallSpeed = Math.min(0.32, 0.12 + GAME.level * 0.02);
-  updateHUD();
-  showToast('🚀 Уровень ' + GAME.level + '!', 1800);
-  showComboBanner('LEVEL ' + GAME.level + '!');
-  spawnConfetti(30);
-  // ускоряем спавн — перезапускаем таймер
-  clearTimeout(GAME.spawnInterval);
-  scheduleSpawn();
-}
+/* --- Завершение уровня --- */
+async function levelComplete() {
+  M3.busy = true;
+  M3.running = false;
+  spawnConfetti(80);
+  fireworks();
 
-function gameLoop(now) {
-  if (!GAME.running) return;
-  const dt = Math.min(60, now - GAME.lastTime);
-  GAME.lastTime = now;
+  if (navigator.vibrate) navigator.vibrate([40, 60, 40, 60, 80]);
 
-  const areaHeight = gameArea.clientHeight;
-  for (let i = GAME.hearts.length - 1; i >= 0; i--) {
-    const h = GAME.hearts[i];
-    if (h.caught) continue;
-    h.y += h.vy * dt;
-    h.el.style.transform = `translate(${h.x}px, ${h.y}px)`;
+  // звёзды
+  let stars = 1;
+  if (M3.score >= M3.target * 1.5) stars = 2;
+  if (M3.score >= M3.target * 2) stars = 3;
 
-    // упало вниз
-    if (h.y > areaHeight + 10) {
-      if (h.type !== 'bomb') {
-        // пропущенное сердечко сбрасывает комбо и отнимает жизнь (только нормальное)
-        GAME.combo = 1;
-        GAME.comboCount = 0;
-        if (h.type === 'normal') {
-          GAME.lives--;
-          updateHUD();
-          if (navigator.vibrate) navigator.vibrate(50);
-          if (GAME.lives <= 0) {
-            h.el.remove();
-            removeHeartFromList(h);
-            endGame();
-            return;
-          }
-        } else {
-          updateHUD();
-        }
-      }
-      h.el.remove();
-      removeHeartFromList(h);
-    }
+  if (M3.score > M3.bestScore) {
+    M3.bestScore = M3.score;
+    localStorage.setItem('alina_best3', M3.bestScore);
+    bestEl.textContent = M3.bestScore;
+  }
+  if (M3.level > M3.bestLevel) {
+    M3.bestLevel = M3.level;
+    localStorage.setItem('alina_bestLevel', M3.bestLevel);
+    bestLevelEl.textContent = M3.bestLevel;
   }
 
-  GAME.rafId = requestAnimationFrame(gameLoop);
+  levelScreen.classList.remove('hidden');
+  levelScreen.innerHTML = `
+    <h3>✨ Уровень ${M3.level} пройден!</h3>
+    <div class="stars">${'⭐'.repeat(stars)}${'☆'.repeat(3 - stars)}</div>
+    <p>Счёт: <b>${M3.score}</b><br>Макс. комбо: <b>x${M3.maxCombo}</b></p>
+    <button class="btn btn-small" id="nextLevelBtn">Уровень ${M3.level + 1} →</button>
+  `;
+  document.getElementById('nextLevelBtn').addEventListener('click', () => {
+    levelScreen.classList.add('hidden');
+    M3.level++;
+    M3.score = 0;
+    M3.maxCombo = 0;
+    M3.moves = Math.max(12, 20 - Math.floor(M3.level / 3));
+    M3.target = Math.round(500 + (M3.level - 1) * 250);
+    updateHUD();
+    createBoard();
+    M3.running = true;
+    M3.busy = false;
+    showToast('🚀 Уровень ' + M3.level + '!', 2000);
+  });
 }
 
+/* --- Конец игры --- */
 function endGame() {
-  GAME.running = false;
-  clearTimeout(GAME.spawnInterval);
-  cancelAnimationFrame(GAME.rafId);
-  GAME.hearts.forEach(h => h.el.remove());
-  GAME.hearts = [];
+  M3.running = false;
+  M3.busy = false;
+  clearSelection();
 
-  if (GAME.score > bestScore) {
-    bestScore = GAME.score;
-    localStorage.setItem('alina_best2', bestScore);
-    bestEl.textContent = bestScore;
-    showToast('🏆 Новый рекорд: ' + GAME.score + '! Ты невероятная 💖', 3500);
-    spawnConfetti(120);
-    fireworks();
+  if (M3.score > M3.bestScore) {
+    M3.bestScore = M3.score;
+    localStorage.setItem('alina_best3', M3.bestScore);
+    bestEl.textContent = M3.bestScore;
+    showToast('🏆 Новый рекорд: ' + M3.score + '!', 3500);
+    spawnConfetti(100);
   } else {
-    showToast('Игра окончена! Счёт: ' + GAME.score + ' 💕', 3000);
+    showToast('Ходы кончились! Счёт: ' + M3.score, 3000);
   }
 
-  gameOverlay.classList.remove('hidden');
-  gameOverlay.innerHTML = `
-    <h3>💔 Игра окончена</h3>
-    <p>Счёт: <b>${GAME.score}</b><br>Уровень: <b>${GAME.level}</b><br>Рекорд: <b>${bestScore}</b></p>
+  overlayEl.classList.remove('hidden');
+  overlayEl.innerHTML = `
+    <h3>💔 Ходы кончились</h3>
+    <p>Счёт: <b>${M3.score}</b><br>Уровень: <b>${M3.level}</b><br>Цель была: <b>${M3.target}</b></p>
     <button class="btn btn-small" id="startGame">Играть снова</button>
   `;
-  document.getElementById('startGame').addEventListener('click', startGame);
+  document.getElementById('startGame').addEventListener('click', startMatch3);
 }
 
-startGameBtn.addEventListener('click', startGame);
+/* --- Старт --- */
+function startMatch3() {
+  // сброс настроек
+  M3.level = 1;
+  M3.score = 0;
+  M3.maxCombo = 0;
+  M3.moves = 20;
+  M3.target = 500;
+  M3.running = true;
+  M3.busy = false;
+  M3.selected = null;
+
+  overlayEl.classList.add('hidden');
+  levelScreen.classList.add('hidden');
+
+  createBoard();
+  updateHUD();
+
+  // если вдруг стартовое поле без ходов — перемешаем
+  if (!findHint()) {
+    reshuffle();
+  }
+}
+
+startBtn.addEventListener('click', startMatch3);
+
+/* Инициализация HUD */
+updateHUD();
+
+/* Подсказка после бездействия — мягко подсвечиваем возможный ход */
+let hintTimer;
+function resetHintTimer() {
+  clearTimeout(hintTimer);
+  if (!M3.running) return;
+  hintTimer = setTimeout(() => {
+    const hint = findHint();
+    if (hint) {
+      const [r1, c1, r2, c2] = hint;
+      M3.board[r1][c1].el.classList.add('hint');
+      M3.board[r2][c2].el.classList.add('hint');
+      setTimeout(() => {
+        M3.board[r1][c1].el.classList.remove('hint');
+        M3.board[r2][c2].el.classList.remove('hint');
+      }, 2400);
+    }
+  }, 8000);
+}
+['pointerdown','touchstart','keydown'].forEach(ev =>
+  window.addEventListener(ev, resetHintTimer, { passive: true })
+);
 
 /* =====================================================
-   Музыка
+   МУЗЫКА
    ===================================================== */
 const musicBtn = document.getElementById('musicBtn');
 let audioCtx = null;
@@ -1616,9 +1880,7 @@ let musicPlaying = false;
 let musicNodes = [];
 
 function startSynthMusic() {
-  if (!audioCtx) {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  }
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   if (audioCtx.state === 'suspended') audioCtx.resume();
 
   const notes = [523.25, 587.33, 659.25, 783.99, 659.25, 587.33, 523.25, 392.00,
@@ -1662,12 +1924,8 @@ if (CONFIG.musicUrl) {
 
 musicBtn.addEventListener('click', () => {
   if (!musicPlaying) {
-    if (audioEl) {
-      audioEl.play().catch(() => showToast('Не удалось запустить музыку'));
-    } else {
-      musicPlaying = true;
-      startSynthMusic();
-    }
+    if (audioEl) audioEl.play().catch(() => showToast('Не удалось запустить музыку'));
+    else { musicPlaying = true; startSynthMusic(); }
     musicPlaying = true;
     musicBtn.classList.add('playing');
     musicBtn.textContent = '🎶';
@@ -1683,7 +1941,7 @@ musicBtn.addEventListener('click', () => {
 });
 
 /* =====================================================
-   Кнопка "наверх"
+   НАВЕРХ
    ===================================================== */
 const fab = document.getElementById('fab');
 window.addEventListener('scroll', () => {
@@ -1692,7 +1950,7 @@ window.addEventListener('scroll', () => {
 fab.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
 /* =====================================================
-   Финальный сюрприз
+   ФИНАЛЬНЫЙ СЮРПРИЗ
    ===================================================== */
 const finalBtn = document.getElementById('finalBtn');
 const finalSurprise = document.getElementById('finalSurprise');
@@ -1706,7 +1964,7 @@ finalBtn.addEventListener('click', () => {
 closeSurprise.addEventListener('click', () => finalSurprise.classList.remove('show'));
 
 /* =====================================================
-   Приветствия и бездействие
+   ПРИВЕТСТВИЯ + БЕЗДЕЙСТВИЕ
    ===================================================== */
 setTimeout(() => showToast('Привет, Алина! Этот сайт — для тебя 💖', 3500), 1200);
 
@@ -1740,11 +1998,11 @@ function resetIdle() {
 );
 resetIdle();
 
-/* =====================================================
-   Остановка игры при скрытии вкладки
-   ===================================================== */
+/* Остановка игры при скрытии вкладки */
 document.addEventListener('visibilitychange', () => {
-  if (document.hidden && GAME.running) endGame();
+  if (document.hidden && M3.running) {
+    // просто пауза без штрафа — не завершаем
+  }
 });
 </script>
 
